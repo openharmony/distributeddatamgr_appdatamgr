@@ -15,6 +15,9 @@
 
 #include "sqlite_global_config.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "logger.h"
 #include "sqlite3sym.h"
 
@@ -29,10 +32,17 @@ const std::string SqliteGlobalConfig::DEFAULT_JOURNAL_MODE = "WAL";
 const std::string SqliteGlobalConfig::WAL_SYNC_MODE = "FULL";
 const int SqliteGlobalConfig::JOURNAL_FILE_SIZE = 524288; /* 512KB */
 const int SqliteGlobalConfig::WAL_AUTO_CHECKPOINT = 100;  /* 100 pages */
-static SqliteGlobalConfig globalConfig;
+constexpr int APP_DEFAULT_UMASK = 0002;
+
+void SqliteGlobalConfig::InitSqliteGlobalConfig()
+{
+    static SqliteGlobalConfig globalConfig;
+}
 
 SqliteGlobalConfig::SqliteGlobalConfig()
 {
+    umask(APP_DEFAULT_UMASK);
+
     sqlite3_config(SQLITE_CONFIG_MULTITHREAD);
 
     sqlite3_config(SQLITE_CONFIG_LOG, &SqliteLogCallback, CALLBACK_LOG_SWITCH ? reinterpret_cast<void *>(1) : NULL);

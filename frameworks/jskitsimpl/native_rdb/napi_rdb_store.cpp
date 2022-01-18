@@ -53,6 +53,7 @@ public:
     void BindArgs(napi_env env, napi_value value);
     void JSNumber2NativeType(std::shared_ptr<OHOS::NativeRdb::RdbStore> &rdbStore);
     std::string tableName;
+    std::vector<std::string> tablesName;
     std::string whereClause;
     std::vector<std::string> whereArgs;
     std::vector<std::string> selectionArgs;
@@ -183,6 +184,7 @@ void RdbStoreProxy::Init(napi_env env, napi_value exports)
         DECLARE_NAPI_GETTER("isHoldingConnection", IsHoldingConnection),
         DECLARE_NAPI_GETTER("isReadOnly", IsReadOnly),
         DECLARE_NAPI_GETTER("isMemoryRdb", IsMemoryRdb),
+        DECLARE_NAPI_FUNCTION("setDistributedTables", SetDistributedTables),
     };
     napi_value cons = nullptr;
     napi_define_class(env, "RdbStore", NAPI_AUTO_LENGTH, Initialize, nullptr,
@@ -291,6 +293,26 @@ void ParseTableName(const napi_env &env, const napi_value &arg, RdbStoreContext 
 {
     asyncContext->tableName = JSUtils::Convert2String(env, arg, E_EMPTY_TABLE_NAME);
     LOG_DEBUG("ParseTableName is : %{public}s", asyncContext->tableName.c_str());
+}
+
+void ParseTablesName(const napi_env &env, const napi_value &arg, RdbStoreContext *asyncContext)
+{
+    uint32_t arrLen = 0;
+    napi_get_array_length(env, arg, &arrLen);
+    if (arrLen == 0) {
+        return;
+    }
+    for (uint32_t i = 0; i < arrLen; ++i) {
+        napi_value element;
+        napi_get_element(env, arg, i, &element);
+        napi_valuetype type;
+        napi_typeof(env, element, &type);
+        if (type == napi_string) {
+            std::string table = JSUtils::Convert2String(env, element, JSUtils::DEFAULT_BUF_SIZE);
+            LOG_INFO("ParseTablesName: %{public}s", table.c_str());
+            asyncContext->tablesName.push_back(table);
+        }
+    }
 }
 
 void ParsePredicates(const napi_env &env, const napi_value &arg, RdbStoreContext *asyncContext)
@@ -901,6 +923,27 @@ napi_value RdbStoreProxy::ChangeEncryptKey(napi_env env, napi_callback_info info
             int errCode = obj->rdbStore_->ChangeEncryptKey(context->newKey);
             LOG_DEBUG("RdbStoreProxy::ChangeEncryptKey errCode is : %{public}d", errCode);
             return (errCode == E_OK) ? OK : ERR;
+        },
+        [](RdbStoreContext *context, napi_value &output) {
+            napi_status status = napi_get_undefined(context->env, &output);
+            return (status == napi_ok) ? OK : ERR;
+        });
+}
+
+napi_value RdbStoreProxy::SetDistributedTables(napi_env env, napi_callback_info info)
+{
+    NapiAsyncProxy<RdbStoreContext> proxy;
+    proxy.Init(env, info);
+    std::vector<NapiAsyncProxy<RdbStoreContext>::InputParser> parsers;
+    parsers.push_back(ParseTablesName);
+    proxy.ParseInputs(parsers, ParseThis);
+    return proxy.DoAsyncWork(
+        "SetDistributedTables",
+        [](RdbStoreContext *context) {
+            RdbStoreProxy *obj = reinterpret_cast<RdbStoreProxy *>(context->boundObj);
+            bool res = obj->rdbStore_->SetDistributedTables(context->tablesName);
+            LOG_DEBUG("RdbStoreProxy::SetDistributedTables is: %{public}d", res);
+            return res ? OK : ERR;
         },
         [](RdbStoreContext *context, napi_value &output) {
             napi_status status = napi_get_undefined(context->env, &output);

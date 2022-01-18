@@ -19,19 +19,24 @@
 
 #include "abs_predicates.h"
 
-namespace OHOS {
-namespace NativeRdb {
+namespace OHOS::NativeRdb {
 class AbsRdbPredicates : public AbsPredicates {
 public:
     explicit AbsRdbPredicates(std::string tableName);
-    std::string GetTableName() const;
+    
     virtual ~AbsRdbPredicates() override {}
+    
     std::string ToString() const;
+    
+    std::string GetTableName() const;
+    
+    AbsRdbPredicates *InDevices(std::vector<std::string>& devices);
+    
+    AbsRdbPredicates *InAllDevices();
 
 private:
     std::string tableName;
 };
-} // namespace NativeRdb
-} // namespace OHOS
+}
 
 #endif

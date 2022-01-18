@@ -18,6 +18,7 @@
 #include "logger.h"
 #include "rdb_errno.h"
 #include "rdb_store_impl.h"
+#include "sqlite_global_config.h"
 #include "unistd.h"
 
 namespace OHOS {
@@ -27,6 +28,7 @@ std::map<std::string, std::shared_ptr<RdbStore>> RdbHelper::storeCache_;
 std::shared_ptr<RdbStore> RdbHelper::GetRdbStore(
     const RdbStoreConfig &config, int version, RdbOpenCallback &openCallback, int &errCode)
 {
+    SqliteGlobalConfig::InitSqliteGlobalConfig();
     std::shared_ptr<RdbStore> rdbStore;
     {
         std::lock_guard<std::mutex> lock(mutex_);

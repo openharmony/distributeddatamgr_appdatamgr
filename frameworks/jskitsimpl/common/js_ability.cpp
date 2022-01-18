@@ -33,29 +33,47 @@ static const OHOS::HiviewDFX::HiLogLabel PREFIX_LABEL = { LOG_CORE, 0xD001650, "
 #define LOG_ERROR(...) ((void)OHOS::HiviewDFX::HiLog::Error(PREFIX_LABEL, __VA_ARGS__))
 
 #ifdef STANDARD_SYSTEM_ENABLE
-std::string JSAbility::GetDatabaseDir(napi_env env)
+static AppExecFwk::Ability* GetAbility(napi_env env)
 {
     napi_value global = nullptr;
-    napi_value abilityContext = nullptr;
-
     napi_status status = napi_get_global(env, &global);
     if (status != napi_ok || global == nullptr) {
         LOG_ERROR("Cannot get global instance for %{public}d", status);
         return nullptr;
     }
-
+    
+    napi_value abilityContext = nullptr;
     status = napi_get_named_property(env, global, "ability", &abilityContext);
     if (status != napi_ok || abilityContext == nullptr) {
         LOG_ERROR("Cannot get ability context for %{public}d", status);
         return nullptr;
     }
-
+    
     AppExecFwk::Ability *ability = nullptr;
     status = napi_get_value_external(env, abilityContext, (void **)&ability);
     if (status != napi_ok || ability == nullptr) {
         LOG_ERROR("Get ability form property failed for %{public}d", status);
+        return nullptr;
+    }
+    return ability;
+}
+
+std::string JSAbility::GetDatabaseDir(napi_env env)
+{
+    AppExecFwk::Ability* ability = GetAbility(env);
+    if (ability == nullptr) {
+        return std::string();
     }
     return ability->GetDatabaseDir();
+}
+
+std::string JSAbility::GetBundleName(napi_env env)
+{
+    AppExecFwk::Ability* ability = GetAbility(env);
+    if (ability == nullptr) {
+        return std::string();
+    }
+    return ability->GetBundleName();
 }
 #else
 std::string JSAbility::GetDatabaseDir(napi_env env)

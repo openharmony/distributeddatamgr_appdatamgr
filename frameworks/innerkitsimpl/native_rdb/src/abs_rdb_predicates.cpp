@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-#include "abs_rdb_predicates.h"
+#define LOG_TAG "AbsRdbPredicates"
 
+#include "abs_rdb_predicates.h"
 #include "logger.h"
 
-namespace OHOS {
-namespace NativeRdb {
+namespace OHOS::NativeRdb {
 AbsRdbPredicates::AbsRdbPredicates(std::string tableName)
 {
     if (tableName.empty()) {
@@ -40,7 +40,7 @@ std::string AbsRdbPredicates::GetTableName() const
 std::string AbsRdbPredicates::ToString() const
 {
     std::string args;
-    for (std::string item : GetWhereArgs()) {
+    for (const auto& item : GetWhereArgs()) {
         args += item + ", ";
     }
     return "TableName = " + GetTableName() + ", {WhereClause:" + GetWhereClause() + ", whereArgs:{" + args + "}"
@@ -49,5 +49,16 @@ std::string AbsRdbPredicates::ToString() const
            + ", distinct:" + std::to_string(IsDistinct()) + ", isNeedAnd:" + std::to_string(IsNeedAnd())
            + ", isSorted:" + std::to_string(IsSorted()) + "}";
 }
-} // namespace NativeRdb
-} // namespace OHOS
+
+AbsRdbPredicates* AbsRdbPredicates::InDevices(std::vector<std::string> &devices)
+{
+    LOG_INFO("not implement");
+    return this;
+}
+
+AbsRdbPredicates* AbsRdbPredicates::InAllDevices()
+{
+    LOG_INFO("not implement");
+    return this;
+}
+}

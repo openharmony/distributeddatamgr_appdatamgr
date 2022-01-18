@@ -35,6 +35,7 @@ ohos_unittest("NativeRdbTest") {
   sources = [
     "unittest/rdb_attach_test.cpp",
     "unittest/rdb_delete_test.cpp",
+    "unittest/rdb_distributed_test.cpp",
     "unittest/rdb_encrypt_test.cpp",
     "unittest/rdb_execute_test.cpp",
     "unittest/rdb_helper_test.cpp",

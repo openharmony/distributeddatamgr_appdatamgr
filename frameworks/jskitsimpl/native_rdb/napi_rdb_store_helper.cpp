@@ -323,6 +323,7 @@ void ParseStoreConfig(const napi_env &env, const napi_value &object, HelperRdbCo
     LOG_DEBUG("ParseStoreConfig path=%{public}s", path.c_str());
     NAPI_ASSERT_RETURN_VOID(env, errorCode == E_OK, "Get database path failed.");
     asyncContext->config.SetPath(path);
+    asyncContext->config.SetBundleName(JSAbility::GetBundleName(env));
 }
 
 void ParsePath(const napi_env &env, const napi_value &arg, HelperRdbContext *asyncContext)

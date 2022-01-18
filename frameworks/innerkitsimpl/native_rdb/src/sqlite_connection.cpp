@@ -31,6 +31,7 @@
 #include "sqlite_errno.h"
 #include "sqlite_global_config.h"
 #include "sqlite_utils.h"
+#include "relational/relational_store_sqlite_ext.h"
 
 namespace OHOS {
 namespace NativeRdb {

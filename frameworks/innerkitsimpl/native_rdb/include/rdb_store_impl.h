@@ -22,6 +22,8 @@
 #include <mutex>
 #include <thread>
 
+#include "rdb_client.h"
+#include "irdb_store.h"
 #include "rdb_store.h"
 #include "rdb_store_config.h"
 #include "sqlite_connection_pool.h"
@@ -30,9 +32,7 @@
 
 #include "transaction_observer.h"
 
-namespace OHOS {
-namespace NativeRdb {
-
+namespace OHOS::NativeRdb {
 class RdbStoreImpl : public RdbStore, public std::enable_shared_from_this<RdbStoreImpl> {
 public:
     static std::shared_ptr<RdbStore> Open(const RdbStoreConfig &config, int &errCode);
@@ -106,12 +106,25 @@ public:
     int Count(int64_t &outValue, const AbsRdbPredicates &predicates) override;
     int Update(int &changedRows, const ValuesBucket &values, const AbsRdbPredicates &predicates) override;
     int Delete(int &deletedRows, const AbsRdbPredicates &predicates) override;
+    
+    bool SetDistributedTables(const std::vector<std::string>& tables) override;
+    
+    bool Sync(SyncOption& option, AbsRdbPredicates& predicate, SyncCallback& callback) override;
+    
+    bool Subscribe(SubscribeOption& option, RdbStoreObserver& observer) override;
+    
+    bool UnSubscribe(SubscribeOption& option) override;
+    
+    // user must use UDID
+    bool DropDeviceData(std::vector<std::string>& devices, DropOption& option) override;
 
 private:
     int InnerOpen(const RdbStoreConfig &config);
     std::shared_ptr<StoreSession> GetThreadSession();
     void ReleaseThreadSession();
     int CheckAttach(const std::string &sql);
+    bool InitDistributed();
+    void ServiceDeathCallback();
 
     SqliteConnectionPool *connectionPool;
     static const int MAX_IDLE_SESSION_SIZE = 5;
@@ -127,8 +140,11 @@ private:
     std::string fileSecurityLevel;
     std::string fileType;
     std::stack<TransactionObserver *> transactionObserverStack;
+    
+    std::mutex mutex_;
+    std::unique_ptr<OHOS::DistributedKv::RdbStoreParam> distributedStoreParam_;
+    std::shared_ptr<OHOS::DistributedKv::IRdbStore> distributedStore_;
+    RdbClient::RdbServiceDeathCallback deathCallback_;
 };
-
-} // namespace NativeRdb
-} // namespace OHOS
+}
 #endif

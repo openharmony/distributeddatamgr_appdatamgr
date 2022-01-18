@@ -31,7 +31,7 @@ namespace NativeRdb {
 std::map<std::string, int> SqliteDatabaseUtils::g_statementType = SqliteDatabaseUtils::MapInit();
 std::mutex SqliteDatabaseUtils::g_locker;
 // Set the file access permissions is 777
-int SqliteDatabaseUtils::g_mkdirMode = 0777;
+int SqliteDatabaseUtils::g_mkdirMode = 0771;
 std::map<std::string, int> SqliteDatabaseUtils::MapInit()
 {
     std::map<std::string, int> temp;

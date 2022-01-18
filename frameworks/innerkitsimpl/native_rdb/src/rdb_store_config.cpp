@@ -13,10 +13,12 @@
  * limitations under the License.
  */
 
-#include "rdb_store_config.h"
+#define LOG_TAG "RdbStoreConfig"
 
-namespace OHOS {
-namespace NativeRdb {
+#include "rdb_store_config.h"
+#include "logger.h"
+
+namespace OHOS::NativeRdb {
 RdbStoreConfig::RdbStoreConfig(const RdbStoreConfig &config)
 {
     name = config.GetName();
@@ -179,6 +181,36 @@ void RdbStoreConfig::ClearEncryptKey()
     encryptKey.clear();
 }
 
+int RdbStoreConfig::SetDistributedType(DistributedType type)
+{
+    if (type < DistributedType::RDB_DEVICE_COLLABORATION || type >= DistributedType::RDB_DISTRIBUTED_TYPE_MAX) {
+        LOG_ERROR("type is invalid");
+        return -1;
+    }
+    distributedType_ = type;
+    return 0;
+}
+
+DistributedType RdbStoreConfig::GetDistributedType() const
+{
+    return distributedType_;
+}
+
+int RdbStoreConfig::SetBundleName(const std::string& bundleName)
+{
+    if (bundleName.empty()) {
+        LOG_ERROR("bundleName is empty");
+        return -1;
+    }
+    bundleName_ = bundleName;
+    return 0;
+}
+
+std::string RdbStoreConfig::GetBundleName() const
+{
+    return bundleName_;
+}
+
 std::string RdbStoreConfig::GetJournalModeValue(JournalMode journalMode)
 {
     std::string value = "";
@@ -261,5 +293,4 @@ std::string RdbStoreConfig::GetDatabaseFileSecurityLevelValue(DatabaseFileSecuri
 
     return value;
 }
-} // namespace NativeRdb
-} // namespace OHOS
+}

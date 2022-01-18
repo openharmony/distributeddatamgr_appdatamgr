@@ -18,13 +18,14 @@
 #include <unistd.h>
 #include "logger.h"
 #include "rdb_errno.h"
+#include "rdb_client.h"
 #include "sqlite_shared_result_set.h"
 #include "sqlite_sql_builder.h"
 #include "sqlite_utils.h"
 #include "step_result_set.h"
 
-namespace OHOS {
-namespace NativeRdb {
+using namespace OHOS::DistributedKv;
+namespace OHOS::NativeRdb {
 std::shared_ptr<RdbStore> RdbStoreImpl::Open(const RdbStoreConfig &config, int &errCode)
 {
     std::shared_ptr<RdbStoreImpl> rdbStore = std::make_shared<RdbStoreImpl>();
@@ -34,6 +35,16 @@ std::shared_ptr<RdbStore> RdbStoreImpl::Open(const RdbStoreConfig &config, int &
     }
 
     return rdbStore;
+}
+
+static std::string RemoveSuffix(const std::string& name)
+{
+    std::string suffix(".db");
+    auto pos = name.rfind(suffix);
+    if (pos == std::string::npos || pos < name.length() - suffix.length()) {
+        return name;
+    }
+    return std::string(name, 0, pos);
 }
 
 int RdbStoreImpl::InnerOpen(const RdbStoreConfig &config)
@@ -51,7 +62,8 @@ int RdbStoreImpl::InnerOpen(const RdbStoreConfig &config)
     name = config.GetName();
     fileSecurityLevel = config.GetDatabaseFileSecurityLevel();
     fileType = config.GetDatabaseFileType();
-
+    distributedStoreParam_= std::make_unique<RdbStoreParam>(config.GetBundleName(), config.GetPath(),
+        RemoveSuffix(config.GetName()), config.GetDistributedType());
     return E_OK;
 }
 
@@ -62,12 +74,12 @@ RdbStoreImpl::RdbStoreImpl()
 
 RdbStoreImpl::~RdbStoreImpl()
 {
-    if (connectionPool != nullptr) {
-        delete connectionPool;
-    }
-
+    delete connectionPool;
     threadMap.clear();
     idleSessions.clear();
+    if (distributedStoreParam_ != nullptr) {
+        RdbClient::GetInstance().UnRegisterRdbServiceDeathCallback(distributedStoreParam_->storeName_);
+    }
 }
 
 std::shared_ptr<StoreSession> RdbStoreImpl::GetThreadSession()
@@ -660,5 +672,73 @@ std::unique_ptr<ResultSet> RdbStoreImpl::QueryByStep(const std::string &sql,
         std::make_unique<StepResultSet>(shared_from_this(), sql, selectionArgs);
     return resultSet;
 }
-} // namespace NativeRdb
-} // namespace OHOS
+
+void RdbStoreImpl::ServiceDeathCallback()
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    LOG_INFO("enter");
+    distributedStore_ = nullptr;
+}
+
+bool RdbStoreImpl::InitDistributed()
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (distributedStore_ != nullptr) {
+        return true;
+    }
+    if (distributedStoreParam_ == nullptr) {
+        LOG_ERROR("distributed store param is not init");
+        return false;
+    }
+    if (deathCallback_ == nullptr) {
+        deathCallback_ = [this] { ServiceDeathCallback(); };
+    }
+    
+    distributedStore_ = RdbClient::GetInstance().GetRdbStore(*distributedStoreParam_);
+    if (distributedStore_ == nullptr) {
+        LOG_ERROR("get rdb store failed");
+        return false;
+    }
+    RdbClient::GetInstance().RegisterRdbServiceDeathCallback(distributedStoreParam_->storeName_, deathCallback_);
+    
+    LOG_INFO("success");
+    return true;
+}
+
+bool RdbStoreImpl::SetDistributedTables(const std::vector<std::string> &tables)
+{
+    if (!InitDistributed()) {
+        return false;
+    }
+    if (distributedStore_->SetDistributedTables(tables) != 0) {
+        LOG_ERROR("set distributed tables failed");
+        return false;
+    }
+    LOG_ERROR("set distributed tables success");
+    return true;
+}
+
+bool RdbStoreImpl::Sync(SyncOption &option, AbsRdbPredicates &predicate, SyncCallback &callback)
+{
+    LOG_INFO("not implement");
+    return true;
+}
+
+bool RdbStoreImpl::Subscribe(SubscribeOption &option, RdbStoreObserver &observer)
+{
+    LOG_INFO("not implement");
+    return true;
+}
+
+bool RdbStoreImpl::UnSubscribe(SubscribeOption &option)
+{
+    LOG_INFO("not implement");
+    return true;
+}
+
+bool RdbStoreImpl::DropDeviceData(std::vector<std::string> &devices, DropOption &option)
+{
+    LOG_INFO("not implement");
+    return true;
+}
+}

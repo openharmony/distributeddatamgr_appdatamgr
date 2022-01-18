@@ -205,7 +205,6 @@ ValueObject *ValueObject::Unmarshalling(Parcel &parcel)
     switch (parcel.ReadInt16()) {
         case (int16_t)ValueObjectType::TYPE_NULL: {
             pValueObject->type = ValueObjectType::TYPE_NULL;
-            pValueObject->value = nullptr;
             break;
         }
         case (int16_t)ValueObjectType::TYPE_INT: {

@@ -27,6 +27,7 @@ namespace JsKit {
 class JSAbility final {
 public:
   static std::string GetDatabaseDir(napi_env env);
+  static std::string GetBundleName(napi_env env);
 };
 } // namespace JsKit
 } // namespace OHOS

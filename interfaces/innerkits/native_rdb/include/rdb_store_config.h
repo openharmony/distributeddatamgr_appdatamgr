@@ -18,6 +18,7 @@
 
 #include <string>
 #include <vector>
+#include <rdb_parcel.h>
 
 namespace OHOS {
 namespace NativeRdb {
@@ -59,6 +60,8 @@ enum class DatabaseFileSecurityLevel {
     NO_LEVEL,
 };
 
+using DistributedType = OHOS::DistributedKv::RdbDistributedType;
+
 class RdbStoreConfig {
 public:
     RdbStoreConfig(const RdbStoreConfig &config);
@@ -87,6 +90,12 @@ public:
     void SetDatabaseFileType(DatabaseFileType type);
     void SetEncryptKey(const std::vector<uint8_t> &encryptKey);
     void ClearEncryptKey();
+    
+    // distributed rdb
+    int SetBundleName(const std::string& bundleName);
+    std::string GetBundleName() const;
+    int SetDistributedType(DistributedType type);
+    DistributedType GetDistributedType() const;
 
     static std::string GetJournalModeValue(JournalMode journalMode);
     static std::string GetSyncModeValue(SyncMode syncMode);
@@ -103,6 +112,11 @@ private:
     bool readOnly;
     std::string databaseFileType;
     std::string databaseFileSecurityLevel;
+    
+    // distributed rdb
+    DistributedType distributedType_ = DistributedType::RDB_DEVICE_COLLABORATION;
+    std::string bundleName_;
+    //
 };
 
 } // namespace NativeRdb

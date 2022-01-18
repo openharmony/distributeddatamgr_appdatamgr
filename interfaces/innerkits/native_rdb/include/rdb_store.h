@@ -38,8 +38,38 @@ enum class ConflictResolution {
     ON_CONFLICT_REPLACE,
 };
 
+class RdbStoreObserver {
+    virtual void OnChange(std::vector<std::string>& devices) = 0; // networkid
+};
+
 class RdbStore {
 public:
+    enum SyncMode {
+        PUSH,
+        PULL,
+    };
+    
+    struct SyncOption {
+        SyncMode mode;
+        bool isBlock;
+    };
+    
+    using SyncResult = std::map<std::string, int>; // networkId
+    using SyncCallback = std::function<void(SyncResult&)>;
+    
+    enum SubscribeMode {
+        LOCAL,
+        REMOTE,
+        LOCAL_AND_REMOTE,
+    };
+    
+    struct SubscribeOption {
+        SubscribeMode mode;
+    };
+    
+    struct DropOption {
+    };
+    
     virtual ~RdbStore(){};
     virtual int Insert(int64_t &outRowId, const std::string &table, const ValuesBucket &initialValues) = 0;
     virtual int Replace(int64_t &outRowId, const std::string &table, const ValuesBucket &initialValues) = 0;
@@ -98,6 +128,17 @@ public:
     virtual bool IsMemoryRdb() const = 0;
     virtual int ChangeDbFileForRestore(const std::string newPath, const std::string backupPath,
         const std::vector<uint8_t> &newKey) = 0;
+    
+    virtual bool SetDistributedTables(const std::vector<std::string>& tables) = 0;
+    
+    virtual bool Sync(SyncOption& option, AbsRdbPredicates& predicate, SyncCallback& callback) = 0;
+    
+    virtual bool Subscribe(SubscribeOption& option, RdbStoreObserver& observer) = 0;
+    
+    virtual bool UnSubscribe(SubscribeOption& option) = 0;
+    
+    // user must use UDID
+    virtual bool DropDeviceData(std::vector<std::string>& devices, DropOption& option) = 0;
 };
 
 } // namespace NativeRdb
