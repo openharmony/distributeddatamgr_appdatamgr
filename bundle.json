@@ -1,6 +1,6 @@
 {
     "name": "@ohos/distributeddatamgr_appdatamgr",
-    "version": "3.1.0",
+    "version": "1.0.0",
     "description": "Local Data Management",
     "homePage": "https://gitee.com/openharmony",
     "license": "Apache V2",
@@ -18,7 +18,7 @@
         "appdatamgr"
     ],
     "envs": [],
-    "dirs": {},
+    "dirs": [],
     "author": {
         "name": "",
         "email": "",
@@ -47,24 +47,8 @@
         "rom": "",
         "ram": "",
         "deps": {
-            "components": [
-                "ability_manager",
-                "want",
-                "appexecfwk_base",
-                "appexecfwk_core",
-                "libhilog",
-                "ipc_core",
-                "ace_napi",
-                "samgr_proxy"
-            ],
-            "third_party": [
-                "sqlite",
-                "shared_icuuc",
-                "shared_icui18n",
-                "libxml2",
-                "libsec_shared",
-                "gtest_main"
-            ]
+            "components": [],
+            "third_party": []
         },
         "build": {
             "sub_component": [
