@@ -37,16 +37,14 @@ enum class ConflictResolution {
     ON_CONFLICT_REPLACE,
 };
 
-class RdbStoreObserver {
-    virtual void OnChange(std::vector<std::string>& devices) = 0; // networkid
-};
-
 class RdbStore {
 public:
     using SyncOption = DistributedRdb::SyncOption;
     using SyncCallback = DistributedRdb::SyncCallback;
+    using SubscribeMode = DistributedRdb::SubscribeMode;
     using SubscribeOption = DistributedRdb::SubscribeOption;
     using DropOption = DistributedRdb::DropOption;
+    using RdbStoreObserver = DistributedRdb::RdbStoreObserver;
     
     virtual ~RdbStore(){};
     virtual int Insert(int64_t &outRowId, const std::string &table, const ValuesBucket &initialValues) = 0;
@@ -109,14 +107,16 @@ public:
     
     virtual bool SetDistributedTables(const std::vector<std::string>& tables) = 0;
     
-    virtual bool Sync(SyncOption& option, AbsRdbPredicates& predicate, SyncCallback& callback) = 0;
+    virtual std::string ObtainDistributedTableName(const std::string& device, const std::string& table) = 0;
     
-    virtual bool Subscribe(SubscribeOption& option, RdbStoreObserver& observer) = 0;
+    virtual bool Sync(const SyncOption& option, const AbsRdbPredicates& predicate, const SyncCallback& callback) = 0;
     
-    virtual bool UnSubscribe(SubscribeOption& option) = 0;
+    virtual bool Subscribe(const SubscribeOption& option, RdbStoreObserver *observer) = 0;
+    
+    virtual bool UnSubscribe(const SubscribeOption& option, RdbStoreObserver *observer) = 0;
     
     // user must use UDID
-    virtual bool DropDeviceData(std::vector<std::string>& devices, DropOption& option) = 0;
+    virtual bool DropDeviceData(const std::vector<std::string>& devices, const DropOption& option) = 0;
 };
 }
 #endif

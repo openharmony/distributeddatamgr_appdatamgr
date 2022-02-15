@@ -27,15 +27,19 @@ ohos_shared_library("rdb") {
     "../napi_resultset/include",
     "//third_party/node/src",
     "//utils/native/base/include",
+    "//foundation/distributeddatamgr/distributeddatamgr/frameworks/innerkitsimpl/rdb/include",
   ]
 
   sources = [
     "../common/src/js_ability.cpp",
     "../common/src/js_utils.cpp",
     "src/entry_point.cpp",
+    "src/napi_rdb_const_properties.cpp",
     "src/napi_rdb_predicates.cpp",
     "src/napi_rdb_store.cpp",
     "src/napi_rdb_store_helper.cpp",
+    "src/napi_rdb_store_observer.cpp",
+    "src/napi_uv_queue.cpp",
     "src/napi_values_bucket.cpp",
   ]
 

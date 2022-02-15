@@ -18,6 +18,7 @@
 #define NATIVE_RDB_ABSRDBPREDICATES_H
 
 #include "abs_predicates.h"
+#include "rdb_types.h"
 
 namespace OHOS::NativeRdb {
 class AbsRdbPredicates : public AbsPredicates {
@@ -34,8 +35,18 @@ public:
     
     AbsRdbPredicates *InAllDevices();
 
+    AbsRdbPredicates* EqualTo(std::string field, std::string value) override;
+    AbsRdbPredicates* NotEqualTo(std::string field, std::string value) override;
+    AbsRdbPredicates* And() override;
+    AbsRdbPredicates* Or() override;
+    AbsRdbPredicates* OrderByAsc(std::string field) override;
+    AbsRdbPredicates* OrderByDesc(std::string field) override;
+
+    const DistributedRdb::RdbPredicates& GetDistributedPredicates() const;
+
 private:
     std::string tableName;
+    mutable DistributedRdb::RdbPredicates predicates_;
 };
 }
 

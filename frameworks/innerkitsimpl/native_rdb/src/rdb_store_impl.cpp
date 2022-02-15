@@ -23,6 +23,7 @@
 #include "sqlite_sql_builder.h"
 #include "sqlite_utils.h"
 #include "step_result_set.h"
+#include "relational_store_manager.h"
 
 namespace OHOS::NativeRdb {
 std::shared_ptr<RdbStore> RdbStoreImpl::Open(const RdbStoreConfig &config, int &errCode)
@@ -76,7 +77,6 @@ RdbStoreImpl::~RdbStoreImpl()
     delete connectionPool;
     threadMap.clear();
     idleSessions.clear();
-    DistributedRdb::RdbManager::UnRegisterRdbServiceDeathObserver(syncerParam_.storeName_);
 }
 
 std::shared_ptr<StoreSession> RdbStoreImpl::GetThreadSession()
@@ -670,64 +670,64 @@ std::unique_ptr<ResultSet> RdbStoreImpl::QueryByStep(const std::string &sql,
     return resultSet;
 }
 
-void RdbStoreImpl::ServiceDeathCallback()
+bool RdbStoreImpl::SetDistributedTables(const std::vector<std::string> &tables)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-    LOG_INFO("enter");
-    syncer_ = nullptr;
-}
-
-bool RdbStoreImpl::InitDistributed()
-{
-    std::lock_guard<std::mutex> lock(mutex_);
-    if (syncer_ != nullptr) {
-        return true;
-    }
-    
-    syncer_ = DistributedRdb::RdbManager::GetRdbSyncer(syncerParam_);
-    if (syncer_ == nullptr) {
-        LOG_ERROR("get rdb store failed");
+    auto service = DistributedRdb::RdbManager::GetRdbService(syncerParam_);
+    if (service == nullptr) {
         return false;
     }
-    
-    DistributedRdb::RdbManager::RegisterRdbServiceDeathObserver(syncerParam_.storeName_,
-                                                                [this] { ServiceDeathCallback(); });
+    if (service->SetDistributedTables(syncerParam_, tables) != 0) {
+        LOG_ERROR("failed");
+        return false;
+    }
+    LOG_ERROR("success");
+    return true;
+}
+
+std::string RdbStoreImpl::ObtainDistributedTableName(const std::string &device, const std::string &table)
+{
+    auto service = DistributedRdb::RdbManager::GetRdbService(syncerParam_);
+    if (service == nullptr) {
+        return "";
+    }
+    return service->ObtainDistributedTableName(device, table);
+}
+
+bool RdbStoreImpl::Sync(const SyncOption &option, const AbsRdbPredicates &predicate, const SyncCallback &callback)
+{
+    auto service = DistributedRdb::RdbManager::GetRdbService(syncerParam_);
+    if (service == nullptr) {
+        return false;
+    }
+    if (service->Sync(syncerParam_, option, predicate.GetDistributedPredicates(), callback) != 0) {
+        LOG_ERROR("failed");
+        return false;
+    }
     LOG_INFO("success");
     return true;
 }
 
-bool RdbStoreImpl::SetDistributedTables(const std::vector<std::string> &tables)
+bool RdbStoreImpl::Subscribe(const SubscribeOption &option, RdbStoreObserver *observer)
 {
-    if (!InitDistributed()) {
+    LOG_INFO("enter");
+    auto service = DistributedRdb::RdbManager::GetRdbService(syncerParam_);
+    if (service == nullptr) {
         return false;
     }
-    if (syncer_->SetDistributedTables(tables) != 0) {
-        LOG_ERROR("set distributed tables failed");
+    return service->Subscribe(syncerParam_, option, observer) == 0;
+}
+
+bool RdbStoreImpl::UnSubscribe(const SubscribeOption &option, RdbStoreObserver *observer)
+{
+    LOG_INFO("enter");
+    auto service = DistributedRdb::RdbManager::GetRdbService(syncerParam_);
+    if (service == nullptr) {
         return false;
     }
-    LOG_ERROR("set distributed tables success");
-    return true;
+    return service->UnSubscribe(syncerParam_, option, observer) == 0;
 }
 
-bool RdbStoreImpl::Sync(SyncOption &option, AbsRdbPredicates &predicate, SyncCallback &callback)
-{
-    LOG_INFO("not implement");
-    return true;
-}
-
-bool RdbStoreImpl::Subscribe(SubscribeOption &option, RdbStoreObserver &observer)
-{
-    LOG_INFO("not implement");
-    return true;
-}
-
-bool RdbStoreImpl::UnSubscribe(SubscribeOption &option)
-{
-    LOG_INFO("not implement");
-    return true;
-}
-
-bool RdbStoreImpl::DropDeviceData(std::vector<std::string> &devices, DropOption &option)
+bool RdbStoreImpl::DropDeviceData(const std::vector<std::string> &devices, const DropOption &option)
 {
     LOG_INFO("not implement");
     return true;

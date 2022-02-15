@@ -17,6 +17,8 @@
 
 #include "abs_rdb_predicates.h"
 #include "logger.h"
+#include "rdb_manager.h"
+#include "rdb_service.h"
 
 namespace OHOS::NativeRdb {
 AbsRdbPredicates::AbsRdbPredicates(std::string tableName)
@@ -27,6 +29,7 @@ AbsRdbPredicates::AbsRdbPredicates(std::string tableName)
         return;
     }
     this->tableName = tableName;
+    predicates_.table_ = tableName;
 }
 
 /**
@@ -52,13 +55,68 @@ std::string AbsRdbPredicates::ToString() const
 
 AbsRdbPredicates* AbsRdbPredicates::InDevices(std::vector<std::string> &devices)
 {
-    LOG_INFO("not implement");
+    predicates_.devices_ = devices;
     return this;
 }
 
 AbsRdbPredicates* AbsRdbPredicates::InAllDevices()
 {
-    LOG_INFO("not implement");
+    predicates_.devices_ = DistributedRdb::RdbManager::GetConnectDevices();
+    for (const auto& device : predicates_.devices_) {
+        LOG_INFO("%{public}.6s", device.c_str());
+    }
     return this;
+}
+
+const DistributedRdb::RdbPredicates& AbsRdbPredicates::GetDistributedPredicates() const
+{
+    int limit = GetLimit();
+    if (limit >= 0) {
+        predicates_.AddOperation(DistributedRdb::RdbPredicateOperator::LIMIT,
+                                 std::to_string(limit), std::to_string(GetOffset()));
+    }
+    return predicates_;
+}
+
+AbsRdbPredicates* AbsRdbPredicates::EqualTo(std::string field, std::string value)
+{
+    predicates_.AddOperation(DistributedRdb::EQUAL_TO, field, value);
+    return (AbsRdbPredicates *)AbsPredicates::EqualTo(field, value);
+}
+
+AbsRdbPredicates* AbsRdbPredicates::NotEqualTo(std::string field, std::string value)
+{
+    predicates_.AddOperation(DistributedRdb::NOT_EQUAL_TO, field, value);
+    return (AbsRdbPredicates *)AbsPredicates::NotEqualTo(field, value);
+}
+
+AbsRdbPredicates* AbsRdbPredicates::And()
+{
+    std::string field;
+    std::string value;
+    predicates_.AddOperation(DistributedRdb::AND, field, value);
+    return (AbsRdbPredicates *)AbsPredicates::And();
+}
+
+AbsRdbPredicates* AbsRdbPredicates::Or()
+{
+    std::string field;
+    std::string value;
+    predicates_.AddOperation(DistributedRdb::OR, field, value);
+    return (AbsRdbPredicates *)AbsPredicates::Or();
+}
+
+AbsRdbPredicates* AbsRdbPredicates::OrderByAsc(std::string field)
+{
+    std::string isAsc = "true";
+    predicates_.AddOperation(DistributedRdb::ORDER_BY, field, isAsc);
+    return (AbsRdbPredicates *)AbsPredicates::OrderByAsc(field);
+}
+
+AbsRdbPredicates* AbsRdbPredicates::OrderByDesc(std::string field)
+{
+    std::string isAsc = "false";
+    predicates_.AddOperation(DistributedRdb::ORDER_BY, field, isAsc);
+    return (AbsRdbPredicates *)AbsPredicates::OrderByDesc(field);
 }
 }

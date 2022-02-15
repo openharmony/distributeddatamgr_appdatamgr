@@ -15,12 +15,16 @@
 
 #ifndef RDB_JSKIT_NAPI_RDB_STORE_H
 #define RDB_JSKIT_NAPI_RDB_STORE_H
+
+#include <list>
 #include <mutex>
 #include "napi/native_api.h"
 #include "napi/native_common.h"
 #include "napi/native_node_api.h"
 
 #include "rdb_helper.h"
+#include "napi_rdb_store_observer.h"
+#include "rdb_types.h"
 
 namespace OHOS {
 namespace RdbJsKit {
@@ -62,10 +66,21 @@ private:
     static napi_value ChangeDbFileForRestore(napi_env env, napi_callback_info info);
     static napi_value ChangeEncryptKey(napi_env env, napi_callback_info info);
     static napi_value SetDistributedTables(napi_env env, napi_callback_info info);
-    
+    static napi_value ObtainDistributedTableName(napi_env env, napi_callback_info info);
+    static napi_value Sync(napi_env env, napi_callback_info info);
+    static napi_value OnEvent(napi_env env, napi_callback_info info);
+    static napi_value OffEvent(napi_env env, napi_callback_info info);
+
+    static constexpr int MIN_ON_EVENT_ARG_NUM = 2;
+    static constexpr int MAX_ON_EVENT_ARG_NUM = 5;
+
+    void OnDataChangeEvent(napi_env env, size_t argc, napi_value* argv);
+    void OffDataChangeEvent(napi_env env, size_t argc, napi_value* argv);
+
     std::mutex mutex_;
     std::shared_ptr<OHOS::NativeRdb::RdbStore> rdbStore_;
     napi_ref ref_ = nullptr;
+    std::list<std::shared_ptr<NapiRdbStoreObserver>> observers_[DistributedRdb::SUBSCRIBE_MODE_MAX];
 };
 } // namespace RdbJsKit
 } // namespace OHOS

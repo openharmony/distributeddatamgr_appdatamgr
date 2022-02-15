@@ -93,7 +93,7 @@ std::string JSUtils::ConvertAny2String(napi_env env, napi_value jsValue)
     return "invalid type";
 }
 
-napi_value JSUtils::Convert2JSValue(napi_env env, std::vector<std::string> &value)
+napi_value JSUtils::Convert2JSValue(napi_env env, const std::vector<std::string> &value)
 {
     napi_value jsValue;
     napi_status status = napi_create_array_with_length(env, value.size(), &jsValue);
@@ -117,7 +117,7 @@ napi_value JSUtils::Convert2JSValue(napi_env env, const std::string &value)
     return jsValue;
 }
 
-napi_value JSUtils::Convert2JSValue(napi_env env, std::vector<uint8_t> &value)
+napi_value JSUtils::Convert2JSValue(napi_env env, const std::vector<uint8_t> &value)
 {
     napi_value jsValue;
     void *native = nullptr;
@@ -171,6 +171,29 @@ napi_value JSUtils::Convert2JSValue(napi_env env, bool value)
     if (status != napi_ok) {
         return nullptr;
     }
+    return jsValue;
+}
+
+napi_value JSUtils::Convert2JSValue(napi_env env, const std::map<std::string, int> &value)
+{
+    napi_value jsValue;
+    napi_status status = napi_create_array_with_length(env, value.size(), &jsValue);
+    if (status != napi_ok) {
+        return nullptr;
+    }
+
+    int index = 0;
+    for (const auto& [device, result] : value) {
+        napi_value jsElement;
+        status = napi_create_array_with_length(env, SYNC_RESULT_ELEMNT_NUM, &jsElement);
+        if (status != napi_ok) {
+            return nullptr;
+        }
+        napi_set_element(env, jsElement, 0, Convert2JSValue(env, device));
+        napi_set_element(env, jsElement, 1, Convert2JSValue(env, result));
+        napi_set_element(env, jsValue, index++, jsElement);
+    }
+
     return jsValue;
 }
 } // namespace AppDataMgrJsKit

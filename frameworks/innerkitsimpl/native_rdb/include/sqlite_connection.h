@@ -65,6 +65,9 @@ private:
     int SetWalSyncMode(const std::string &syncMode);
     int PrepareAndBind(const std::string &sql, const std::vector<ValueObject> &bindArgs);
     void LimitPermission(const std::string &dbPath) const;
+    
+    int SetPersistWal();
+    
     sqlite3 *dbHandle;
     bool isWriteConnection;
     bool isReadOnly;

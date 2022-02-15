@@ -64,7 +64,7 @@ constexpr int E_STORE_SESSION_NO_CURRENT_TRANSACTION = (E_BASE + 40);
 constexpr int E_NOT_SUPPORT = (E_BASE + 41);
 constexpr int E_INVALID_PARCEL = (E_BASE + 42);
 constexpr int E_INVALID_FILE_PATH = (E_BASE + 43);
-constexpr int E_INIT_DISTRIBUTED = (E_BASE + 44);
+constexpr int E_SET_PERSIST_WAL = (E_BASE + 44);
 } // namespace NativeRdb
 } // namespace OHOS
 

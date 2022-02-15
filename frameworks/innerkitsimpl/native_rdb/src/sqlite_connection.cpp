@@ -88,6 +88,7 @@ int SqliteConnection::InnerOpen(const SqliteConfig &config)
         return SQLiteError::ErrNo(errCode);
     }
 
+    SetPersistWal();
     LimitPermission(dbPath);
 
     errCode = Config(config);
@@ -188,6 +189,18 @@ int SqliteConnection::SetEncryptKey(const std::vector<uint8_t> &encryptKey)
         return SQLiteError::ErrNo(errCode);
     }
 
+    return E_OK;
+}
+
+int SqliteConnection::SetPersistWal()
+{
+    int opcode = 1;
+    int errCode = sqlite3_file_control(dbHandle, "main", SQLITE_FCNTL_PERSIST_WAL, &opcode);
+    if (errCode != SQLITE_OK) {
+        LOG_ERROR("failed");
+        return E_SET_PERSIST_WAL;
+    }
+    LOG_INFO("success");
     return E_OK;
 }
 

@@ -59,9 +59,7 @@ describe('rdbStoreDistributedTest', function () {
             let sqlStatement = "CREATE TABLE IF NOT EXISTS employee (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "name TEXT NOT NULL," +
-                "age INTEGER," +
-                "salary REAL," +
-                "data BLOB)"
+                "age INTEGER)"
             let promise1 = rdbStore.executeSql(sqlStatement, null)
             promise1.then(() => {
                 console.log(TAG + "create table employee success")
@@ -159,8 +157,6 @@ describe('rdbStoreDistributedTest', function () {
         const record = {
             "name": "Jim",
             "age": 20,
-            "salary": 10000.0,
-            "data": [1, 2, 3],
         }
         let promise = rdbStore.insert("employee", record)
         promise.then((rowId) => {
@@ -172,6 +168,178 @@ describe('rdbStoreDistributedTest', function () {
         })
         done()
         console.log(TAG + "************* testRdbStoreDistributed005 end *************");
+    })
+    console.log(TAG + "*************Unit Test End*************");
+
+    /**
+     * @tc.name update record after setting distributed table
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_Distributed_006
+     * @tc.desc update record after setting distributed table
+     */
+    it('testRdbStoreDistributed0006', 0, async function (done) {
+        console.log(TAG + "************* testRdbStoreDistributed006 start *************");
+        const record = {
+            "name": "Jim",
+            "age": 30,
+        }
+        let predicate = new rdb.RdbPredicates("employee");
+        predicate.equalTo("id",  1);
+        let promise = rdbStore.update(record, predicate);
+        promise.then((rowId) => {
+            console.log(TAG + "update one record success " + rowId)
+            expect(1).assertEqual(rowId)
+        }).catch(() => {
+            console.log(TAG + "update one record failed");
+            expect(null).assertFail();
+        })
+        done()
+        console.log(TAG + "************* testRdbStoreDistributed006 end *************");
+    })
+
+    /**
+     * @tc.name query record after setting distributed table
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_Distributed_007
+     * @tc.desc query record after setting distributed table
+     */
+    it('testRdbStoreDistributed0007', 0, async function (done) {
+        console.log(TAG + "************* testRdbStoreDistributed0007 start *************");
+        {
+            let predicates = await new dataRdb.RdbPredicates("employee")
+            let resultSet = await rdbStore.query(predicates)
+            try {
+                console.log(TAG + "product resultSet query done");
+                expect(true).assertEqual(resultSet.goToFirstRow())
+                const id = await resultSet.getLong(resultSet.getColumnIndex("id"))
+                const name = await resultSet.getString(resultSet.getColumnIndex("name"))
+                const age = await resultSet.getLong(resultSet.getColumnIndex("age"))
+
+                await expect(1).assertEqual(id);
+                await expect("Jim").assertEqual(name);
+                await expect(30).assertEqual(age);
+                resultSet.close();
+                expect(true).assertEqual(resultSet.isClosed)
+            } catch (e) {
+                console.log("insert error " + e);
+            }
+            resultSet = null
+        }
+        done();
+        console.log(TAG + "************* testRdbStoreDistributed0007 end *************");
+    })
+
+    /**
+     * @tc.name delete record after setting distributed table
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_Distributed_008
+     * @tc.desc delete record after setting distributed table
+     */
+    it('testRdbStoreDistributed0008', 0, async function (done) {
+        console.log(TAG + "************* testRdbStoreDistributed0008 start *************");
+        {
+            let predicates = await new dataRdb.RdbPredicates("employee")
+            let deletePromise = rdbStore.delete(predicates)
+            deletePromise.then((number) => {
+                expect(1).assertEqual(number)
+                console.log(TAG + "employee Delete done: " + number)
+            }).catch((err) => {
+                expect(null).assertFail()
+            })
+        }
+
+        done()
+        console.log(TAG + "************* testRdbStoreDistributed0008 end *************");
+    })
+
+    /**
+     * @tc.name predicates inDevice
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_Distributed_009
+     * @tc.desc predicates inDevice
+     */
+    it('testRdbStoreDistributed0009', 0, async function (done) {
+        console.log(TAG + "************* testRdbStoreDistributed0009 start *************");
+        {
+            let predicates = new dataRdb.RdbPredicates("employee")
+            predicates = predicates.inDevices("1234567890");
+            expect(predicates).assertEqual(predicates);
+        }
+
+        done()
+        console.log(TAG + "************* testRdbStoreDistributed0009 end *************");
+    })
+
+    /**
+     * @tc.name predicates inAllDevices
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_Distributed_010
+     * @tc.desc predicates inAllDevices
+     */
+    it('testRdbStoreDistributed0010', 0, async function (done) {
+        console.log(TAG + "************* testRdbStoreDistributed0010 start *************");
+        {
+            let predicates = new dataRdb.RdbPredicates("employee")
+            predicates = predicates.inAllDevices();
+            expect(predicates).assertEqual(predicates);
+        }
+
+        done()
+        console.log(TAG + "************* testRdbStoreDistributed0010 end *************");
+    })
+
+    /**
+     * @tc.name sync test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_Distributed_011
+     * @tc.desc sync test
+     */
+    it('testRdbStoreDistributed0011', 0, async function (done) {
+        console.log(TAG + "************* testRdbStoreDistributed0011 start *************");
+        {
+            let predicates = new dataRdb.RdbPredicates("employee")
+            predicates = predicates.inAllDevices();
+            let promise = rdbStore.sync(dataRdb.SyncMode.SYNC_MODE_PUSH, predicates);
+            promise.then((result) => {
+                console.log(TAG + "sync success");
+                expect(rdbStore).assertEqual(rdbStore);
+            }).catch((err) => {
+                console.log(TAG + "sync failed");
+            })
+        }
+
+        done()
+        console.log(TAG + "************* testRdbStoreDistributed0011 end *************");
+    })
+
+    /**
+     * @tc.name subscribe test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_Distributed_012
+     * @tc.desc subscribe test
+     */
+    it('testRdbStoreDistributed0012', 0, async function (done) {
+        console.log(TAG + "************* testRdbStoreDistributed0012 start *************");
+        {
+            rdbStore.on("dataChange", (device) => {
+                console.log(TAG + device + " dataChange");
+            });
+            expect(rdbStore).assertEqual(rdbStore);
+        }
+
+        done()
+        console.log(TAG + "************* testRdbStoreDistributed0012 end *************");
+    })
+
+    /**
+     * @tc.name subscribe test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_Distributed_013
+     * @tc.desc subscribe test
+     */
+    it('testRdbStoreDistributed0013', 0, async function (done) {
+        console.log(TAG + "************* testRdbStoreDistributed0013 start *************");
+        {
+            rdbStore.off("dataChange", (device) => {
+                console.log(TAG + device + " dataChange");
+            });
+            expect(rdbStore).assertEqual(rdbStore);
+        }
+
+        done()
+        console.log(TAG + "************* testRdbStoreDistributed0013 end *************");
     })
     console.log(TAG + "*************Unit Test End*************");
 })

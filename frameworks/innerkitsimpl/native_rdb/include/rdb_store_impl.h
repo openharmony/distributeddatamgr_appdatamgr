@@ -23,7 +23,6 @@
 #include <thread>
 
 #include "rdb_store.h"
-#include "rdb_syncer.h"
 #include "rdb_store_config.h"
 #include "sqlite_connection_pool.h"
 #include "sqlite_statement.h"
@@ -108,22 +107,22 @@ public:
     
     bool SetDistributedTables(const std::vector<std::string>& tables) override;
     
-    bool Sync(SyncOption& option, AbsRdbPredicates& predicate, SyncCallback& callback) override;
+    std::string ObtainDistributedTableName(const std::string& device, const std::string& table) override;
     
-    bool Subscribe(SubscribeOption& option, RdbStoreObserver& observer) override;
+    bool Sync(const SyncOption& option, const AbsRdbPredicates& predicate, const SyncCallback& callback) override;
     
-    bool UnSubscribe(SubscribeOption& option) override;
+    bool Subscribe(const SubscribeOption& option, RdbStoreObserver *observer) override;
+    
+    bool UnSubscribe(const SubscribeOption& option, RdbStoreObserver *observer) override;
     
     // user must use UDID
-    bool DropDeviceData(std::vector<std::string>& devices, DropOption& option) override;
+    bool DropDeviceData(const std::vector<std::string>& devices, const DropOption& option) override;
 
 private:
     int InnerOpen(const RdbStoreConfig &config);
     std::shared_ptr<StoreSession> GetThreadSession();
     void ReleaseThreadSession();
     int CheckAttach(const std::string &sql);
-    bool InitDistributed();
-    void ServiceDeathCallback();
 
     SqliteConnectionPool *connectionPool;
     static const int MAX_IDLE_SESSION_SIZE = 5;
@@ -140,9 +139,7 @@ private:
     std::string fileType;
     std::stack<TransactionObserver *> transactionObserverStack;
     
-    std::mutex mutex_;
     DistributedRdb::RdbSyncerParam syncerParam_;
-    std::shared_ptr<DistributedRdb::RdbSyncer> syncer_;
 };
 }
 #endif

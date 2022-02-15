@@ -67,6 +67,8 @@ void RdbPredicatesProxy::Init(napi_env env, napi_value exports)
         DECLARE_NAPI_GETTER_SETTER("joinConditions", GetJoinConditions, SetJoinConditions),
         DECLARE_NAPI_GETTER_SETTER("joinNames", GetJoinTableNames, SetJoinTableNames),
         DECLARE_NAPI_GETTER_SETTER("joinTypes", GetJoinTypes, SetJoinTypes),
+        DECLARE_NAPI_FUNCTION("inDevices", InDevices),
+        DECLARE_NAPI_FUNCTION("inAllDevices", InAllDevices),
     };
 
     napi_value cons;
@@ -682,6 +684,26 @@ napi_value RdbPredicatesProxy::SetJoinTypes(napi_env env, napi_callback_info inf
 std::shared_ptr<NativeRdb::RdbPredicates> RdbPredicatesProxy::GetPredicates() const
 {
     return this->predicates_;
+}
+
+napi_value RdbPredicatesProxy::InDevices(napi_env env, napi_callback_info info)
+{
+    napi_value thiz = nullptr;
+    size_t argc = 1;
+    napi_value args[1] = {nullptr };
+    napi_get_cb_info(env, info, &argc, args, &thiz, nullptr);
+    NAPI_ASSERT(env, argc == 1, "RdbPredicatesProxy::InDevices Invalid args!");
+    auto devices = JSUtils::Convert2StrVector(env, args[0], JSUtils::DEFAULT_BUF_SIZE);
+    GetNativePredicates(env, info)->InDevices(devices);
+    return thiz;
+}
+
+napi_value RdbPredicatesProxy::InAllDevices(napi_env env, napi_callback_info info)
+{
+    napi_value thiz = nullptr;
+    napi_get_cb_info(env, info, nullptr, nullptr, &thiz, nullptr);
+    GetNativePredicates(env, info)->InAllDevices();
+    return thiz;
 }
 } // namespace RdbJsKit
 } // namespace OHOS
