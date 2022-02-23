@@ -29,45 +29,12 @@ ohos_shared_library("storage") {
   ]
 
   sources = [
-    "src/entry_point_storage.cpp",
-    "src/napi_preferences.cpp",
-    "src/napi_storage_helper.cpp",
-  ]
-
-  external_deps = [
-    "hilog_native:libhilog",
-    "napi:ace_napi",
-    "native_appdatamgr:native_preferences",
-  ]
-
-  subsystem_name = "distributeddatamgr"
-  part_name = "native_appdatamgr"
-  relative_install_dir = "module/data"
-}
-
-ohos_shared_library("preferences") {
-  include_dirs = [
-    "include",
-    "../common/include",
-    "//third_party/node/src",
-    "//utils/native/base/include",
-  ]
-
-  sources = [
-    "../common/src/js_ability.cpp",
-    "../common/src/js_utils.cpp",
     "src/entry_point.cpp",
-    "src/napi_preferences.cpp",
-    "src/napi_preferences_helper.cpp",
+    "src/napi_preference.cpp",
+    "src/napi_preference_helper.cpp",
   ]
 
-  deps = [ "//foundation/aafwk/standard/frameworks/kits/ability/native:abilitykit_native" ]
-
   external_deps = [
-    "ability_runtime:ability_manager",
-    "ability_runtime:napi_base_context",
-    "bundle_framework:appexecfwk_base",
-    "bundle_framework:appexecfwk_core",
     "hilog_native:libhilog",
     "napi:ace_napi",
     "native_appdatamgr:native_preferences",

@@ -18,9 +18,10 @@
 
 #include <assert.h>
 
-#include "napi/native_api.h"
 #include "napi/native_common.h"
+#include "napi/native_api.h"
 #include "napi/native_node_api.h"
+
 #include "preferences.h"
 #include "preferences_helper.h"
 
@@ -37,11 +38,17 @@ private:
     explicit PreferencesProxy(std::shared_ptr<OHOS::NativePreferences::Preferences> &value);
     ~PreferencesProxy();
 
+    static napi_value GetValueSync(napi_env env, napi_callback_info info);
     static napi_value GetValue(napi_env env, napi_callback_info info);
+    static napi_value SetValueSync(napi_env env, napi_callback_info info);
     static napi_value SetValue(napi_env env, napi_callback_info info);
+    static napi_value HasKeySync(napi_env env, napi_callback_info info);
     static napi_value HasKey(napi_env env, napi_callback_info info);
+    static napi_value DeleteSync(napi_env env, napi_callback_info info);
     static napi_value Delete(napi_env env, napi_callback_info info);
+    static napi_value FlushSync(napi_env env, napi_callback_info info);
     static napi_value Flush(napi_env env, napi_callback_info info);
+    static napi_value ClearSync(napi_env env, napi_callback_info info);
     static napi_value Clear(napi_env env, napi_callback_info info);
     static napi_value RegisterObserver(napi_env env, napi_callback_info info);
     static napi_value UnRegisterObserver(napi_env env, napi_callback_info info);
