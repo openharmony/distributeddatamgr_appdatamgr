@@ -70,31 +70,3 @@ ohos_shared_library("datashare") {
   subsystem_name = "distributeddatamgr"
   part_name = "data_share"
 }
-
-ohos_shared_library("datasharepredicates") {
-  include_dirs = [
-    "${datashare_common_napi_path}/include",
-    "${datashare_common_native_path}/include",
-  ]
-
-  sources = [
-    "${datashare_common_napi_path}/src/datashare_predicates_proxy.cpp",
-    "${datashare_napi_path}/dataShare/src/native_datashare_predicates_module.cpp",
-  ]
-
-  deps = [ "${datashare_common_native_path}:datashare_common" ]
-
-  external_deps = [
-    "data_share:datashare_abilitykit",
-    "data_share:datashare_common",
-    "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
-    "napi:ace_napi",
-    "utils_base:utils",
-  ]
-
-  relative_install_dir = "module/data"
-
-  subsystem_name = "distributeddatamgr"
-  part_name = "data_share"
-}

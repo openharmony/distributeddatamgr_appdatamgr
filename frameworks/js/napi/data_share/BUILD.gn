@@ -18,7 +18,6 @@ import(
 group("datashare_napi_packages") {
   deps = [
     "${datashare_napi_path}/dataShare:datashare",
-    "${datashare_napi_path}/dataShare:datasharepredicates",
     "${datashare_napi_path}/datashare_ext_ability:datashareextensionability_napi",
     "${datashare_napi_path}/datashare_ext_ability_context:datashareextensionabilitycontext_napi",
   ]
