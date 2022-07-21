@@ -36,7 +36,7 @@ private:
         ObserverWorker(const NAPIDataShareObserver *observerIn) : observer_(observerIn) {}
     };
 
-    napi_env env_;
+    napi_env env_ = nullptr;
     napi_ref ref_ = nullptr;
     uv_loop_s *loop_ = nullptr;
 };
