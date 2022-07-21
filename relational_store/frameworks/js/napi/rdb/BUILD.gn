@@ -44,12 +44,11 @@ ohos_shared_library("rdb") {
     "src/napi_values_bucket.cpp",
   ]
 
-  deps = [ "//utils/native/base:utils" ]
-
   external_deps = [
     "ability_base:want",
     "ability_runtime:abilitykit_native",
     "ability_runtime:napi_base_context",
+    "c_utils:utils",
     "hilog_native:libhilog",
     "napi:ace_napi",
     "relational_store:native_appdatafwk",

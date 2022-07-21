@@ -32,13 +32,14 @@ ohos_shared_library("native_appdatafwk") {
   subsystem_name = "distributeddatamgr"
   part_name = "relational_store"
 
-  deps = [ "//utils/native/base:utils" ]
-
   public_deps = [
     "//foundation/communication/ipc/interfaces/innerkits/ipc_core:ipc_core",
   ]
 
-  external_deps = [ "hilog_native:libhilog" ]
+  external_deps = [
+    "c_utils:utils",
+    "hilog_native:libhilog",
+  ]
 
   public_configs = [ ":appdatafwk_public_config" ]
 }

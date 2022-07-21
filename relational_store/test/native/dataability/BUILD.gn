@@ -22,7 +22,7 @@ config("module_private_config") {
   include_dirs = [
     "${relational_store_native_path}/dataability/include",
     "${relational_store_innerapi_path}/dataability/include",
-    "//utils/native/base/include",
+    "//commonlibrary/c_utils/base/include",
   ]
 }
 
@@ -34,15 +34,13 @@ ohos_unittest("NativeDataAbilityTest") {
   configs = [ ":module_private_config" ]
 
   external_deps = [
+    "c_utils:utils",
     "hilog_native:libhilog",
     "relational_store:native_dataability",
     "relational_store:native_rdb",
   ]
 
-  deps = [
-    "//third_party/googletest:gtest_main",
-    "//utils/native/base:utils",
-  ]
+  deps = [ "//third_party/googletest:gtest_main" ]
 }
 
 ###############################################################################

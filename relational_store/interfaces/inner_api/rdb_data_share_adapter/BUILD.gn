@@ -45,9 +45,8 @@ ohos_shared_library("rdb_data_share_adapter") {
   subsystem_name = "distributeddatamgr"
   part_name = "relational_store"
 
-  deps = [ "//utils/native/base:utils" ]
-
   external_deps = [
+    "c_utils:utils",
     "hilog_native:libhilog",
     "relational_store:native_rdb",
   ]

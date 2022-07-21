@@ -86,7 +86,6 @@ ohos_shared_library("native_rdb") {
     "//third_party/icu/icu4c:shared_icui18n",
     "//third_party/icu/icu4c:shared_icuuc",
     "//third_party/sqlite:sqlite",
-    "//utils/native/base:utils",
   ]
 
   public_deps = [
@@ -97,6 +96,7 @@ ohos_shared_library("native_rdb") {
   ]
 
   external_deps = [
+    "c_utils:utils",
     "hilog_native:libhilog",
     "hitrace_native:hitrace_meter",
     "hitrace_native:libhitrace",

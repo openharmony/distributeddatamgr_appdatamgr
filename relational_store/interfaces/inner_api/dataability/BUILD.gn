@@ -43,9 +43,8 @@ ohos_shared_library("native_dataability") {
 
   configs = [ ":native_dataability_config" ]
 
-  deps = [ "//utils/native/base:utils" ]
-
   external_deps = [
+    "c_utils:utils",
     "hilog_native:libhilog",
     "ipc:ipc_core",
     "relational_store:native_rdb",

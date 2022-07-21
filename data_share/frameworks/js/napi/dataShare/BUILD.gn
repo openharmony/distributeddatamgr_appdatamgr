@@ -43,6 +43,7 @@ ohos_shared_library("datashare") {
     "ability_runtime:napi_base_context",
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
+    "c_utils:utils",
     "data_share:datashare_abilitykit",
     "data_share:datashare_common",
     "eventhandler:libeventhandler",
@@ -53,7 +54,6 @@ ohos_shared_library("datashare") {
     "relational_store:native_appdatafwk",
     "relational_store:native_dataability",
     "relational_store:native_rdb",
-    "utils_base:utils",
   ]
 
   relative_install_dir = "module/data"
@@ -76,12 +76,12 @@ ohos_shared_library("datasharepredicates") {
   deps = [ "${datashare_innerapi_path}/common:datashare_common" ]
 
   external_deps = [
+    "c_utils:utils",
     "data_share:datashare_abilitykit",
     "data_share:datashare_common",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "napi:ace_napi",
-    "utils_base:utils",
   ]
 
   relative_install_dir = "module/data"
