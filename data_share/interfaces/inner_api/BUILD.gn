@@ -13,6 +13,8 @@
 
 import("//build/ohos.gni")
 import("//foundation/distributeddatamgr/appdatamgr/data_share/datashare.gni")
+import(
+    "//foundation/distributeddatamgr/appdatamgr/relational_store/relational_store.gni")
 
 config("ability_config") {
   visibility = [ ":*" ]
@@ -24,7 +26,7 @@ config("ability_config") {
     "${datashare_native_consumer_path}/include",
     "${datashare_native_provider_path}/include",
     "${ability_runtime_napi_path}/inner/napi_common",
-    "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/rdb/include",
+    "${relational_store_innerapi_path}/rdb/include",
     "//foundation/distributeddatamgr/distributeddatamgr/frameworks/innerkitsimpl/rdb/include",
   ]
 

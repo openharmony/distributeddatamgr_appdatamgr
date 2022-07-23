@@ -23,7 +23,6 @@ config("native_dataability_config") {
     "include",
     "${relational_store_native_path}/dataability/include",
     "${relational_store_native_path}/dataability/src",
-    "//utils/native/base/include",
   ]
 }
 

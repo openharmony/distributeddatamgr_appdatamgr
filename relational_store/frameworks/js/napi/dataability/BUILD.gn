@@ -27,8 +27,6 @@ ohos_shared_library("dataability") {
     "include",
     "${relational_store_js_common_path}/include",
     "${relational_store_napi_path}/rdb/include",
-    "//third_party/node/src",
-    "//utils/native/base/include",
   ]
 
   sources = [

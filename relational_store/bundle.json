@@ -50,19 +50,14 @@
             "components": [
                 "ability_base",
                 "ability_runtime",
-                "want",
-                "libhilog",
-                "ipc_core",
-                "ace_napi",
-                "samgr_proxy",
-                "hitrace_native",
-                "common",
                 "napi",
+                "hitrace_native",
                 "hilog_native",
-                "icu",
-                "samgr_standard",
                 "ipc",
-                "utils_base"
+                "utils_base",
+                "common",
+                "icu",
+                "samgr_standard"
             ],
             "third_party": [
                 "sqlite",

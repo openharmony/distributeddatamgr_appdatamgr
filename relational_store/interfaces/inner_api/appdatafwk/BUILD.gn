@@ -16,10 +16,7 @@ import(
 
 config("appdatafwk_config") {
   visibility = [ ":*" ]
-  include_dirs = [
-    "include",
-    "//utils/native/base/include",
-  ]
+  include_dirs = [ "include" ]
 }
 
 config("appdatafwk_public_config") {

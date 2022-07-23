@@ -19,8 +19,6 @@ ohos_shared_library("datashare") {
     "${datashare_napi_path}/dataShare/include",
     "${datashare_common_napi_path}/include",
     "${datashare_common_native_path}/include",
-    "//third_party/node/src",
-    "//third_party/libuv/include",
   ]
 
   sources = [

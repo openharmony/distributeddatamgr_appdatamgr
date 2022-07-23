@@ -17,7 +17,6 @@ config("native_preferences_config") {
   include_dirs = [
     "include",
     "${preferences_native_path}/include",
-    "//utils/native/base/include",
   ]
 }
 

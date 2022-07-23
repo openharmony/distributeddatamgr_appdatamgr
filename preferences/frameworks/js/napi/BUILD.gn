@@ -12,8 +12,9 @@
 # limitations under the License.
 import("//build/ohos.gni")
 import("//build/ohos/ace/ace.gni")
-import("//foundation/distributeddatamgr/appdatamgr/data_share/datashare.gni")
 import("//foundation/distributeddatamgr/appdatamgr/preferences/preferences.gni")
+import(
+    "//foundation/distributeddatamgr/appdatamgr/relational_store/relational_store.gni")
 
 ohos_copy("appdatamgr_declaration") {
   sources = [ "./api" ]
@@ -26,8 +27,6 @@ ohos_shared_library("storage") {
   include_dirs = [
     "include",
     "${relational_store_js_common_path}/include",
-    "//third_party/node/src",
-    "//utils/native/base/include",
   ]
 
   sources = [
@@ -52,8 +51,6 @@ ohos_shared_library("storage_napi") {
   include_dirs = [
     "include",
     "${relational_store_js_common_path}/include",
-    "//third_party/node/src",
-    "//utils/native/base/include",
   ]
 
   sources = [
@@ -84,8 +81,6 @@ ohos_shared_library("preferences") {
   include_dirs = [
     "include",
     "${relational_store_js_common_path}/include",
-    "//third_party/node/src",
-    "//utils/native/base/include",
   ]
 
   sources = [

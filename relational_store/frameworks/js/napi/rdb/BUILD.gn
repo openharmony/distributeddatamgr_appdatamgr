@@ -27,10 +27,8 @@ ohos_shared_library("rdb") {
   include_dirs = [
     "include",
     "${relational_store_js_common_path}/include",
-    "${datashare_base_path}/interfaces/inner_api/common/include/",
-    "//third_party/node/src",
-    "//utils/native/base/include",
     "${relational_store_napi_path}/rdb/include",
+    "${datashare_base_path}/interfaces/inner_api/common/include/",
   ]
 
   sources = [

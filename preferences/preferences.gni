@@ -18,9 +18,3 @@ preferences_napi_path = "${preferences_base_path}/frameworks/js/napi"
 preferences_native_path = "${preferences_base_path}/frameworks/native"
 
 preferences_innerapi_path = "${preferences_base_path}/interfaces/inner_api"
-
-relational_store_base_path =
-    "//foundation/distributeddatamgr/appdatamgr/relational_store"
-
-relational_store_js_common_path =
-    "${relational_store_base_path}/frameworks/js/napi/common"

@@ -21,7 +21,6 @@ config("native_rdb_config") {
   include_dirs = [
     "include",
     "${relational_store_native_path}/rdb/include",
-    "//utils/system/safwk/native/include",
     "//foundation/distributeddatamgr/distributeddatamgr/services/distributeddataservice/adapter/include/dfx",
   ]
 
