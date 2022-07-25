@@ -27,7 +27,7 @@ OpenHarmony关系型数据库底层使用SQLite作为持久化存储引擎，支
 ## 目录
 
 ```
-//foundation/distributeddatamgr/appdatamgr/relational_store/
+//foundation/distributeddatamgr/relational_store/
 ├── frameworks            # 框架层代码
 │   └── js                # JS API的实现
 │   │   └── napi          # napi代码实现
@@ -49,6 +49,6 @@ OpenHarmony关系型数据库底层使用SQLite作为持久化存储引擎，支
 
 - [分布式数据管理子系统](https://gitee.com/openharmony/docs/blob/master/zh-cn/readme/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%AD%90%E7%B3%BB%E7%BB%9F.md)
 
-- [**distributeddatamgr\_appdatamgr**](https://gitee.com/openharmony/distributeddatamgr_appdatamgr/blob/master/README_zh.md)
+- [**distributeddatamgr\_relational_store**](https://gitee.com/openharmony/distributeddatamgr_relational_store/blob/master/README_zh.md)
 
 - [third\_party\_sqlite](https://gitee.com/openharmony/third_party_sqlite)

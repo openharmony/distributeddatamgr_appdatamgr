@@ -1,10 +1,10 @@
 {
-    "name": "@ohos/distributeddatamgr_appdatamgr",
+    "name": "@ohos/distributeddatamgr_relational_store",
     "version": "3.1.0",
     "description": "Local Data Management",
     "homePage": "https://gitee.com/openharmony",
     "license": "Apache V2",
-    "repository": "https://gitee.com/openharmony/distributeddatamgr_appdatamgr",
+    "repository": "https://gitee.com/openharmony/distributeddatamgr_relational_store",
     "domain": "os",
     "language": "",
     "publishAs": "code-segment",
@@ -15,7 +15,7 @@
     ],
     "keywords": [
         "distributeddatamgr",
-        "appdatamgr"
+        "relational_store"
     ],
     "envs": [],
     "dirs": {},
@@ -32,7 +32,7 @@
         }
     ],
     "segment": {
-        "destPath": "foundation/distributeddatamgr/appdatamgr"
+        "destPath": "foundation/distributeddatamgr/relational_store"
     },
     "component": {
         "name": "relational_store",
@@ -70,16 +70,16 @@
         },
         "build": {
             "sub_component": [
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/appdatafwk:native_appdatafwk",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/dataability:native_dataability",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/rdb_data_share_adapter:rdb_data_share_adapter",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/rdb:native_rdb",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/frameworks/js/napi/dataability:dataability",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/frameworks/js/napi/rdb:rdb"
+                "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/appdatafwk:native_appdatafwk",
+                "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/dataability:native_dataability",
+                "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/rdb_data_share_adapter:rdb_data_share_adapter",
+                "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/rdb:native_rdb",
+                "//foundation/distributeddatamgr/relational_store/frameworks/js/napi/dataability:dataability",
+                "//foundation/distributeddatamgr/relational_store/frameworks/js/napi/rdb:rdb"
             ],
             "inner_kits": [
                 {
-                    "name": "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/rdb:native_rdb",
+                    "name": "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/rdb:native_rdb",
                     "header": {
                         "header_files": [
                             "abs_rdb_predicates.h",
@@ -97,45 +97,45 @@
                             "value_object.h",
                             "values_bucket.h"
                         ],
-                        "header_base": "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/rdb/include"
+                        "header_base": "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/rdb/include"
                     }
                 },
                 {
-                    "name": "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/appdatafwk:native_appdatafwk",
+                    "name": "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/appdatafwk:native_appdatafwk",
                     "header": {
                         "header_files": [
                             "shared_block.h"
                         ],
-                        "header_base": "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/appdatafwk/include"
+                        "header_base": "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/appdatafwk/include"
                     }
                 },
                 {
-                    "name": "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/dataability:native_dataability",
+                    "name": "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/dataability:native_dataability",
                     "header": {
                         "header_files": [
                             "data_ability_predicates.h",
                             "predicates_utils.h"
                         ],
-                        "header_base": "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/dataability/include"
+                        "header_base": "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/dataability/include"
                     }
                 },
                 {
-                    "name": "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/rdb_data_share_adapter:rdb_data_share_adapter",
+                    "name": "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/rdb_data_share_adapter:rdb_data_share_adapter",
                     "header": {
                         "header_files": [
                             "rdb_utils.h"
                         ],
-                        "header_base": "//foundation/distributeddatamgr/appdatamgr/relational_store/interfaces/inner_api/rdb_data_share_adapter/include"
+                        "header_base": "//foundation/distributeddatamgr/relational_store/interfaces/inner_api/rdb_data_share_adapter/include"
                     }
                 }
             ],
             "test": [
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/test/js/dataability:unittest",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/test/js/rdb:unittest",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/test/native/dataability:unittest",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/test/native/rdb:unittest",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/test/native/rdb:fuzztest",
-                "//foundation/distributeddatamgr/appdatamgr/relational_store/test/native/rdb_data_share_adapter:unittest"
+                "//foundation/distributeddatamgr/relational_store/test/js/dataability:unittest",
+                "//foundation/distributeddatamgr/relational_store/test/js/rdb:unittest",
+                "//foundation/distributeddatamgr/relational_store/test/native/dataability:unittest",
+                "//foundation/distributeddatamgr/relational_store/test/native/rdb:unittest",
+                "//foundation/distributeddatamgr/relational_store/test/native/rdb:fuzztest",
+                "//foundation/distributeddatamgr/relational_store/test/native/rdb_data_share_adapter:unittest"
             ]
         }
     }

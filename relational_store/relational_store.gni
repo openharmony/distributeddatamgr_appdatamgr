@@ -11,8 +11,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-relational_store_base_path =
-    "//foundation/distributeddatamgr/appdatamgr/relational_store"
+declare_args() {
+  relational_store_rdb_support_icu = true
+}
+
+relational_store_base_path = "//foundation/distributeddatamgr/relational_store"
 
 relational_store_js_common_path =
     "${relational_store_base_path}/frameworks/js/napi/common"

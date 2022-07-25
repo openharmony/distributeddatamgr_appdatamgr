@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/ohos.gni")
-import("//foundation/distributeddatamgr/appdatamgr/data_share/datashare.gni")
+import("//foundation/distributeddatamgr/data_share/datashare.gni")
 
 config("ability_config") {
   visibility = [ ":*" ]

@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-kv_store_base_path = "//foundation/distributeddatamgr/appdatamgr/kv_store"
+kv_store_base_path = "//foundation/distributeddatamgr/kv_store"
 
 kv_store_native_path = "${kv_store_base_path}/frameworks/native"
 

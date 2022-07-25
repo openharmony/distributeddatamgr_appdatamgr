@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-preferences_base_path = "//foundation/distributeddatamgr/appdatamgr/preferences"
+preferences_base_path = "//foundation/distributeddatamgr/preferences"
 
 preferences_napi_path = "${preferences_base_path}/frameworks/js/napi"
 

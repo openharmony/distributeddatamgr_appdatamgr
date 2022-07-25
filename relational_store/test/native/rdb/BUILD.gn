@@ -11,9 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import("//build/test.gni")
-import("//foundation/distributeddatamgr/appdatamgr/appdatamgr.gni")
-import(
-    "//foundation/distributeddatamgr/appdatamgr/relational_store/relational_store.gni")
+import("//foundation/distributeddatamgr/relational_store/relational_store.gni")
 
 module_output_path = "relational_store/native_rdb"
 

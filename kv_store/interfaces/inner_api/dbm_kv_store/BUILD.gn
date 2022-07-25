@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/lite/config/component/lite_component.gni")
-import("//foundation/distributeddatamgr/appdatamgr/kv_store/kv_store.gni")
+import("//foundation/distributeddatamgr/kv_store/kv_store.gni")
 if (ohos_kernel_type == "liteos_m") {
   static_library("foundation_dbm_kv_store") {
     sources = [ "${kv_store_native_path}/dbm_kv_store/src/kv_store_impl_hal/dbm_kv_store.c" ]

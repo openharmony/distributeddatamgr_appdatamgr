@@ -14,12 +14,11 @@
 #####################hydra-fuzz###################
 import("//build/config/features.gni")
 import("//build/test.gni")
-import(
-    "//foundation/distributeddatamgr/appdatamgr/relational_store/relational_store.gni")
+import("//foundation/distributeddatamgr/relational_store/relational_store.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("RdbImplFuzzTest") {
-  module_out_path = "appdatamgr/nativerdb"
+  module_out_path = "relational_store/nativerdb"
 
   include_dirs = [
     "${relational_store_native_path}/rdb/include",

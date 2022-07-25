@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import("//build/ohos.gni")
-import("//foundation/distributeddatamgr/appdatamgr/preferences/preferences.gni")
+import("//foundation/distributeddatamgr/preferences/preferences.gni")
 config("native_preferences_config") {
   visibility = [ ":*" ]
   include_dirs = [
@@ -21,7 +21,7 @@ config("native_preferences_config") {
 }
 
 config("native_preferences_public_config") {
-  visibility = [ "//foundation/distributeddatamgr/appdatamgr:*" ]
+  visibility = [ "//foundation/distributeddatamgr/preferences:*" ]
   include_dirs = [ "include" ]
 }
 

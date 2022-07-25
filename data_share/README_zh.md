@@ -16,7 +16,7 @@
 ## 目录
 
 ```
-/foundation/distributeddatamgr/appdatamgr/data_share
+/foundation/distributeddatamgr/data_share
 ├── frameworks                                   # 框架代码
 │   ├── js
 │   │   └── napi                                 # NAPI代码存放目录
@@ -45,8 +45,8 @@
 
 ## 相关仓
 
-[分布式数据管理子系统](https://gitee.com/openharmony/distributeddatamgr_appdatamgr/blob/master/README_zh.md)
+[分布式数据管理子系统](https://gitee.com/openharmony/distributeddatamgr_data_share/blob/master/README_zh.md)
 
 [distributeddatamgr_datamgr](https://gitee.com/openharmony/distributeddatamgr_datamgr/blob/master/README_zh.md)
 
-[**distributeddatamgr_appdatamgr**](https://gitee.com/openharmony/distributeddatamgr_appdatamgr/blob/master/README_zh.md)
+[**distributeddatamgr_data_share**](https://gitee.com/openharmony/distributeddatamgr_data_share/blob/master/README_zh.md)

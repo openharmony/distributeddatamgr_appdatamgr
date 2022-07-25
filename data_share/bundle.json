@@ -1,10 +1,10 @@
 {
-    "name": "@ohos/distributeddatamgr_appdatamgr",
+    "name": "@ohos/distributeddatamgr_data_share",
     "version": "3.1.0",
     "description": "Local Data Management",
     "homePage": "https://gitee.com/openharmony",
     "license": "Apache V2",
-    "repository": "https://gitee.com/openharmony/distributeddatamgr_appdatamgr",
+    "repository": "https://gitee.com/openharmony/distributeddatamgr_data_share",
     "domain": "os",
     "language": "",
     "publishAs": "code-segment",
@@ -15,7 +15,7 @@
     ],
     "keywords": [
         "distributeddatamgr",
-        "appdatamgr"
+        "data_share"
     ],
     "envs": [],
     "dirs": {},
@@ -32,7 +32,7 @@
         }
     ],
     "segment": {
-        "destPath": "foundation/distributeddatamgr/appdatamgr"
+        "destPath": "foundation/distributeddatamgr/data_share"
     },
     "component": {
         "name": "data_share",
@@ -67,33 +67,33 @@
         },
         "build": {
             "sub_component": [
-                "//foundation/distributeddatamgr/appdatamgr/data_share/interfaces/inner_api:datashare_abilitykit",
-                "//foundation/distributeddatamgr/appdatamgr/data_share/interfaces/inner_api:datashare_ext_ability_module",
-                "//foundation/distributeddatamgr/appdatamgr/data_share/frameworks/js/napi:datashare_napi_packages",
-                "//foundation/distributeddatamgr/appdatamgr/data_share/interfaces/inner_api/common:datashare_common"
+                "//foundation/distributeddatamgr/data_share/interfaces/inner_api:datashare_abilitykit",
+                "//foundation/distributeddatamgr/data_share/interfaces/inner_api:datashare_ext_ability_module",
+                "//foundation/distributeddatamgr/data_share/frameworks/js/napi:datashare_napi_packages",
+                "//foundation/distributeddatamgr/data_share/interfaces/inner_api/common:datashare_common"
             ],
             "inner_kits": [
                 {
-                    "name": "//foundation/distributeddatamgr/appdatamgr/data_share/interfaces/inner_api:datashare_abilitykit",
+                    "name": "//foundation/distributeddatamgr/data_share/interfaces/inner_api:datashare_abilitykit",
                     "header": {
                         "header_files": [
                             "datashare_helper.h",
                             "datashare_result_set.h"
                         ],
-                        "header_base": "//foundation/distributeddatamgr/appdatamgr/data_share/interfaces/inner_api/consumer/include"
+                        "header_base": "//foundation/distributeddatamgr/data_share/interfaces/inner_api/consumer/include"
                     }
                 },
                 {
-                    "name": "//foundation/distributeddatamgr/appdatamgr/data_share/interfaces/inner_api:datashare_abilitykit",
+                    "name": "//foundation/distributeddatamgr/data_share/interfaces/inner_api:datashare_abilitykit",
                     "header": {
                         "header_files": [
                             "result_set_bridge.h"
                         ],
-                        "header_base": "//foundation/distributeddatamgr/appdatamgr/data_share/interfaces/inner_api/provider/include"
+                        "header_base": "//foundation/distributeddatamgr/data_share/interfaces/inner_api/provider/include"
                     }
                 },
                 {
-                    "name": "//foundation/distributeddatamgr/appdatamgr/data_share/interfaces/inner_api/common:datashare_common",
+                    "name": "//foundation/distributeddatamgr/data_share/interfaces/inner_api/common:datashare_common",
                     "header": {
                         "header_files": [
                             "datashare_errno.h",
@@ -104,7 +104,7 @@
                             "datashare_value_object.h",
                             "datashare_values_bucket.h"
                         ],
-                        "header_base": "//foundation/distributeddatamgr/appdatamgr/data_share/interfaces/inner_api/common/include"
+                        "header_base": "//foundation/distributeddatamgr/data_share/interfaces/inner_api/common/include"
                     }
                 }
             ]

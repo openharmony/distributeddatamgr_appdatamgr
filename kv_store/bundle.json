@@ -5,7 +5,7 @@
     "description": "",
     "publishAs": "code-segment",
     "segment": {
-        "destPath": "foundation/distributeddatamgr/appdatamgr/kv_store/interfaces/inner_api/kv_store"
+        "destPath": "foundation/distributeddatamgr/kv_store/interfaces/inner_api/kv_store"
     },
     "dirs": {},
     "scripts": {},
@@ -28,7 +28,7 @@
             ]
         },
         "build": {
-            "sub_component": [ "//foundation/distributeddatamgr/appdatamgr/kv_store/interfaces/inner_api/kv_store" ],
+            "sub_component": [ "//foundation/distributeddatamgr/kv_store/interfaces/inner_api/kv_store" ],
             "inner_kits": [],
             "test": []
         }

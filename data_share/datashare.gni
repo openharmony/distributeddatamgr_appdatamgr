@@ -21,7 +21,7 @@ ability_runtime_services_path = "${ability_runtime_path}/services"
 
 ability_runtime_napi_path = "${ability_runtime_path}/frameworks/js/napi"
 
-datashare_base_path = "//foundation/distributeddatamgr/appdatamgr/data_share"
+datashare_base_path = "//foundation/distributeddatamgr/data_share"
 
 datashare_common_native_path = "${datashare_base_path}/frameworks/native/common"
 

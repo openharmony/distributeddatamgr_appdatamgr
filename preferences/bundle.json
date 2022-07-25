@@ -1,10 +1,10 @@
 {
-    "name": "@ohos/distributeddatamgr_appdatamgr",
+    "name": "@ohos/distributeddatamgr_preferences",
     "version": "3.1.0",
     "description": "Local Data Management",
     "homePage": "https://gitee.com/openharmony",
     "license": "Apache V2",
-    "repository": "https://gitee.com/openharmony/distributeddatamgr_appdatamgr",
+    "repository": "https://gitee.com/openharmony/distributeddatamgr_preferences",
     "domain": "os",
     "language": "",
     "publishAs": "code-segment",
@@ -15,7 +15,7 @@
     ],
     "keywords": [
         "distributeddatamgr",
-        "appdatamgr"
+        "preferences"
     ],
     "envs": [],
     "dirs": {},
@@ -32,7 +32,7 @@
         }
     ],
     "segment": {
-        "destPath": "foundation/distributeddatamgr/appdatamgr"
+        "destPath": "foundation/distributeddatamgr/preferences"
     },
     "component": {
         "name": "preferences",
@@ -62,14 +62,14 @@
         },
         "build": {
             "sub_component": [
-                "//foundation/distributeddatamgr/appdatamgr/preferences/interfaces/inner_api:native_preferences",
-                "//foundation/distributeddatamgr/appdatamgr/preferences/frameworks/js/napi:preferences",
-                "//foundation/distributeddatamgr/appdatamgr/preferences/frameworks/js/napi:storage",
-                "//foundation/distributeddatamgr/appdatamgr/preferences/frameworks/js/napi:storage_napi"
+                "//foundation/distributeddatamgr/preferences/interfaces/inner_api:native_preferences",
+                "//foundation/distributeddatamgr/preferences/frameworks/js/napi:preferences",
+                "//foundation/distributeddatamgr/preferences/frameworks/js/napi:storage",
+                "//foundation/distributeddatamgr/preferences/frameworks/js/napi:storage_napi"
             ],
             "inner_kits": [
                 {
-                    "name": "//foundation/distributeddatamgr/appdatamgr/preferences/interfaces/inner_api:native_preferences",
+                    "name": "//foundation/distributeddatamgr/preferences/interfaces/inner_api:native_preferences",
                     "header": {
                         "header_files": [
                             "preferences.h",
@@ -79,13 +79,13 @@
                             "preferences_xml_utils.h",
                             "preferences_value.h"
                         ],
-                        "header_base": "//foundation/distributeddatamgr/appdatamgr/preferences/interfaces/inner_api/include"
+                        "header_base": "//foundation/distributeddatamgr/preferences/interfaces/inner_api/include"
                     }
                 }
             ],
             "test": [
-                "//foundation/distributeddatamgr/appdatamgr/preferences/test/native:unittest",
-                "//foundation/distributeddatamgr/appdatamgr/preferences/test/js:unittest"
+                "//foundation/distributeddatamgr/preferences/test/native:unittest",
+                "//foundation/distributeddatamgr/preferences/test/js:unittest"
             ]
         }
     }
