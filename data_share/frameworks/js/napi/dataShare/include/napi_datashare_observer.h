@@ -32,7 +32,7 @@ public:
 private:
     struct ObserverWorker {
         const NAPIDataShareObserver *observer_ = nullptr;
-        napi_env env_;
+        napi_env env_ = nullptr;
         ObserverWorker(const NAPIDataShareObserver *observerIn) : observer_(observerIn) {}
     };
 
