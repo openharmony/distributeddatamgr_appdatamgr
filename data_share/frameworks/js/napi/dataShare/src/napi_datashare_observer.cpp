@@ -25,16 +25,15 @@ NAPIDataShareObserver::NAPIDataShareObserver(napi_env env, napi_value callback)
     napi_get_uv_event_loop(env, &loop_);
 }
 
-NAPIDataShareObserver::~NAPIDataShareObserver()
-{
-    if (ref_ != nullptr) {
-        napi_delete_reference(env_, ref_);
-    }
-}
+NAPIDataShareObserver::~NAPIDataShareObserver() {}
 
 void NAPIDataShareObserver::OnChange()
 {
     LOG_DEBUG("OnChange called");
+    if (ref_ == nullptr) {
+        LOG_ERROR("[ttt] ref_ == nullptr");
+        return;
+    }
     ObserverWorker *observerWorker = new (std::nothrow)ObserverWorker(this);
     if (observerWorker == nullptr) {
         LOG_ERROR("Failed to create observerWorker");
@@ -69,6 +68,15 @@ void NAPIDataShareObserver::OnChange()
         delete observerWorker;
         delete work;
     }
+}
+
+void NAPIDataShareObserver::DeleteReference()
+{
+    LOG_ERROR("[ttt] DeleteReference");
+    if (ref_ != nullptr) {
+        napi_delete_reference(env_, ref_);
+    }
+
 }
 }  // namespace DataShare
 }  // namespace OHOS
