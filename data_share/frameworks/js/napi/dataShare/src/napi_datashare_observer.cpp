@@ -31,7 +31,7 @@ void NAPIDataShareObserver::OnChange()
 {
     LOG_DEBUG("OnChange called");
     if (ref_ == nullptr) {
-        LOG_ERROR("[ttt] ref_ == nullptr");
+        LOG_ERROR("ref_ == nullptr");
         return;
     }
     ObserverWorker *observerWorker = new (std::nothrow)ObserverWorker(this);
@@ -72,7 +72,6 @@ void NAPIDataShareObserver::OnChange()
 
 void NAPIDataShareObserver::DeleteReference()
 {
-    LOG_ERROR("[ttt] DeleteReference");
     if (ref_ != nullptr) {
         napi_delete_reference(env_, ref_);
     }
