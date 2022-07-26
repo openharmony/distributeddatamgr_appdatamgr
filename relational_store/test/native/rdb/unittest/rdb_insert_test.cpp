@@ -689,3 +689,34 @@ HWTEST_F(RdbStoreInsertTest, RdbStore_InsertWithConflictResolution_006_007, Test
     ret = resultSet->Close();
     EXPECT_EQ(ret, E_OK);
 }
+
+/**
+ * @tc.name: RdbStore_BatchInsert_001
+ * @tc.desc: test RdbStore BatchInsert
+ * @tc.type: FUNC
+ * @tc.require: AR000CU2BO
+ */
+HWTEST_F(RdbStoreInsertTest, RdbStore_BatchInsert_001, TestSize.Level1)
+{
+    std::shared_ptr<RdbStore> &store = RdbStoreInsertTest::store;
+    
+    ValuesBucket values;
+    
+    values.PutString("name", "zhangsan");
+    values.PutInt("age", 18);
+    values.PutDouble("salary", 100.5);
+    values.PutBlob("blobType", std::vector<uint8_t>{ 1, 2, 3 });
+    
+    std::vector<ValuesBucket> valuesBuckets;
+    for (int i = 0; i < 100; i++) {
+        valuesBuckets.push_back(values);
+    }
+    
+    int64_t id;
+    int ret = store->BatchInsert(id, "test", valuesBuckets);
+    EXPECT_EQ(E_OK, ret);
+    std::unique_ptr<ResultSet> resultSet = store->QuerySql("SELECT * FROM test");
+    int rowCount = 0;
+    resultSet->GetRowCount(rowCount);
+    EXPECT_EQ(100, rowCount);
+}
