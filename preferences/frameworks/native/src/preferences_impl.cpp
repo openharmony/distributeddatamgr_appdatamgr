@@ -328,7 +328,8 @@ void WriteXmlElement(Element &elem, PreferencesValue value, const std::filesyste
         for (bool val : values) {
             Element element;
             element.tag_ = std::string("bool");
-            element.value_ = std::to_string((bool)val);
+            std::string tmpVal = std::to_string((bool)val);
+            element.value_ = tmpVal == "1" ? "true" : "false";
             elem.children_.push_back(element);
         }
     } else if (value.IsStringArray()) {
@@ -345,7 +346,8 @@ void WriteXmlElement(Element &elem, PreferencesValue value, const std::filesyste
         elem.value_ = std::to_string((int)value);
     } else if (value.IsBool()) {
         elem.tag_ = std::string("bool");
-        elem.value_ = std::to_string((bool)value);
+        std::string tmpVal = std::to_string((bool)value);
+        elem.value_ = tmpVal == "1" ? "true" : "false";
     } else if (value.IsLong()) {
         elem.tag_ = std::string("long");
         elem.value_ = std::to_string((int64_t)value);
