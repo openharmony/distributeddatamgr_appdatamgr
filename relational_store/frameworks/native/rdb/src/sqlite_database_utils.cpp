@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <fstream>
+#include <climits>
 
 #include "logger.h"
 #include "rdb_errno.h"
@@ -115,15 +116,15 @@ bool SqliteDatabaseUtils::RenameFile(std::string &oldFileName, std::string &newF
 /**
  * Get and Check default path.
  */
-std::string SqliteDatabaseUtils::GetDefaultDatabasePath(std::string &context, std::string &name, int &errorCode)
+std::string SqliteDatabaseUtils::GetDefaultDatabasePath(std::string &baseDir, std::string &name, int &errorCode)
 {
     std::unique_lock<std::mutex> lock(g_locker);
-    if (access(context.c_str(), F_OK) != 0) {
-        if (mkdir(context.c_str(), g_mkdirMode)) {
+    if (access(baseDir.c_str(), F_OK) != 0) {
+        if (mkdir(baseDir.c_str(), g_mkdirMode)) {
             errorCode = E_CREATE_FOLDER_FAIL;
         }
     }
-    std::string databasePath = context + "/db";
+    std::string databasePath = baseDir + "/rdb";
     if (access(databasePath.c_str(), F_OK) != 0) {
         if (mkdir(databasePath.c_str(), g_mkdirMode)) {
             errorCode = E_CREATE_FOLDER_FAIL;

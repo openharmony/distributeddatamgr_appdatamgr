@@ -22,11 +22,15 @@ namespace AppDataMgrJsKit {
 Context::Context(std::shared_ptr<AbilityRuntime::Context> stageContext)
 {
     databaseDir_ = stageContext->GetDatabaseDir();
-    LOG_DEBUG("Stage: DatabaseDir %{public}s", databaseDir_.c_str());
     preferencesDir_ = stageContext->GetPreferencesDir();
-    LOG_DEBUG("Stage: PreferencesDir %{public}s", preferencesDir_.c_str());
     bundleName_ = stageContext->GetBundleName();
-    LOG_DEBUG("Stage: BundleName %{public}s", bundleName_.c_str());
+    area_ = stageContext->GetArea();
+    auto hapInfo = stageContext->GetHapModuleInfo();
+    if (hapInfo != nullptr) {
+        moduleName_ = hapInfo->moduleName;
+    }
+    LOG_DEBUG("Stage: area:%{public}d database:%{public}s preferences:%{public}s bundle:%{public}s hap:%{public}s",
+        area_, databaseDir_.c_str(), preferencesDir_.c_str(), bundleName_.c_str(), moduleName_.c_str());
 }
 
 Context::Context(std::shared_ptr<AbilityRuntime::AbilityContext> abilityContext)
@@ -61,6 +65,11 @@ std::string Context::GetBundleName()
 std::string Context::GetModuleName()
 {
     return moduleName_;
+}
+
+int32_t Context::GetArea() const
+{
+    return area_;
 }
 
 bool JSAbility::CheckContext(napi_env env, napi_callback_info info)

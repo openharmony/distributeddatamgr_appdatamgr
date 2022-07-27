@@ -78,9 +78,10 @@ public:
     bool IsMemoryRdb() const;
     std::string GetDatabaseFileType() const;
     std::string GetDatabaseFileSecurityLevel() const;
+    int32_t GetSecurityLevel() const;
 
     // set the journal mode, if not set, the default mode is WAL
-    void SetName(const std::string &name);
+    void SetName(std::string name);
     void SetJournalMode(JournalMode journalMode);
     void SetPath(std::string path);
     void SetReadOnly(bool readOnly);
@@ -94,13 +95,11 @@ public:
     std::string GetBundleName() const;
     int SetDistributedType(DistributedType type);
     DistributedType GetDistributedType() const;
-    void SetAppModuleName(const std::string& moduleName);
-    std::string GetAppModuleName() const;
-    void SetRelativePath(const std::string& relativePath);
-    std::string GetRelativePath() const;
+    void SetModuleName(const std::string& moduleName);
+    std::string GetModuleName() const;
     void SetServiceName(const std::string& serviceName);
-    void SetEncryptLevel(const std::string& secLevel);
-    std::string GetEncryptLevel() const;
+    void SetArea(int32_t area);
+    int32_t GetArea() const;
 
     static std::string GetJournalModeValue(JournalMode journalMode);
     static std::string GetSyncModeValue(SyncMode syncMode);
@@ -120,10 +119,9 @@ private:
 
     // distributed rdb
     DistributedType distributedType_ = DistributedRdb::RdbDistributedType::RDB_DEVICE_COLLABORATION;
+    int32_t area_ = 0;
     std::string bundleName_;
     std::string moduleName_;
-    std::string relativePath_;
-    std::string encryptLevel_;
 };
 } // namespace OHOS::NativeRdb
 

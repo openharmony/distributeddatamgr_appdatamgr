@@ -50,7 +50,7 @@ public:
     static int GetSqlStatementType(std::string sql);
     static void DeleteFile(std::string &fileName);
     static bool RenameFile(std::string &oldFileName, std::string &newFileName);
-    static std::string GetDefaultDatabasePath(std::string &context, std::string &name, int &errorCode);
+    static std::string GetDefaultDatabasePath(std::string &baseDir, std::string &name, int &errorCode);
     static std::string GetCorruptPath(std::string &path, int &errorCode);
     static std::string GetDatabasePathNoName(std::string &context, RdbStoreConfig &fileConfig, int &errorCode);
 

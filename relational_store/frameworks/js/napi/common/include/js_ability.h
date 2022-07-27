@@ -35,8 +35,10 @@ public:
     std::string GetPreferencesDir();
     std::string GetBundleName();
     std::string GetModuleName();
+    int32_t GetArea() const;
 
 private:
+    int32_t area_ = 0;
     std::string databaseDir_;
     std::string preferencesDir_;
     std::string bundleName_;

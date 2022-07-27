@@ -141,9 +141,9 @@ std::string RdbStoreConfig::GetDatabaseFileSecurityLevel() const
     return databaseFileSecurityLevel;
 }
 
-void RdbStoreConfig::SetName(const std::string &name)
+void RdbStoreConfig::SetName(std::string name)
 {
-    this->name = name;
+    this->name = std::move(name);
 }
 
 /**
@@ -164,7 +164,7 @@ void RdbStoreConfig::SetDatabaseFileType(DatabaseFileType type)
  */
 void RdbStoreConfig::SetPath(std::string path)
 {
-    this->path = path;
+    this->path = std::move(path);
 }
 
 void RdbStoreConfig::SetStorageMode(StorageMode storageMode)
@@ -213,22 +213,12 @@ std::string RdbStoreConfig::GetBundleName() const
     return bundleName_;
 }
 
-void RdbStoreConfig::SetRelativePath(const std::string &relativePath)
-{
-    relativePath_ = relativePath;
-}
-
-std::string RdbStoreConfig::GetRelativePath() const
-{
-    return relativePath_;
-}
-
-void RdbStoreConfig::SetAppModuleName(const std::string &moduleName)
+void RdbStoreConfig::SetModuleName(const std::string &moduleName)
 {
     moduleName_ = moduleName;
 }
 
-std::string RdbStoreConfig::GetAppModuleName() const
+std::string RdbStoreConfig::GetModuleName() const
 {
     return moduleName_;
 }
@@ -238,14 +228,14 @@ void RdbStoreConfig::SetServiceName(const std::string &serviceName)
     SetBundleName(serviceName);
 }
 
-void RdbStoreConfig::SetEncryptLevel(const std::string &secLevel)
+void RdbStoreConfig::SetArea(int32_t area)
 {
-    encryptLevel_ = secLevel;
+    area_ = area + 1;
 }
 
-std::string RdbStoreConfig::GetEncryptLevel() const
+int32_t RdbStoreConfig::GetArea() const
 {
-    return encryptLevel_;
+    return area_;
 }
 
 std::string RdbStoreConfig::GetJournalModeValue(JournalMode journalMode)
@@ -329,5 +319,10 @@ std::string RdbStoreConfig::GetDatabaseFileSecurityLevelValue(DatabaseFileSecuri
     }
 
     return value;
+}
+
+int32_t RdbStoreConfig::GetSecurityLevel() const
+{
+    return 0;
 }
 } // namespace OHOS::NativeRdb
