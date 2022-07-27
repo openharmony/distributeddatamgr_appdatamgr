@@ -74,6 +74,7 @@ void NAPIDataShareObserver::DeleteReference()
 {
     if (ref_ != nullptr) {
         napi_delete_reference(env_, ref_);
+        ref_ = nullptr;
     }
 }
 }  // namespace DataShare
