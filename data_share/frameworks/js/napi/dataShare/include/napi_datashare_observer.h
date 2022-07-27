@@ -29,10 +29,10 @@ public:
     NAPIDataShareObserver(napi_env env, napi_value callback);
     virtual ~NAPIDataShareObserver();
     void OnChange() override;
+    void DeleteReference();
 private:
     struct ObserverWorker {
         const NAPIDataShareObserver *observer_ = nullptr;
-        napi_env env_ = nullptr;
         ObserverWorker(const NAPIDataShareObserver *observerIn) : observer_(observerIn) {}
     };
 

@@ -40,26 +40,14 @@ public:
     static napi_value Napi_NormalizeUri(napi_env env, napi_callback_info info);
     static napi_value Napi_DenormalizeUri(napi_env env, napi_callback_info info);
     static napi_value Napi_NotifyChange(napi_env env, napi_callback_info info);
+
+    void ReleaseObserverMap();
 private:
     static napi_value GetConstructor(napi_env env);
     static napi_value Initialize(napi_env env, napi_callback_info info);
 
-    static napi_value RegisterWrap(napi_env env, napi_callback_info info, DSHelperOnOffCB *onCB);
-    static napi_value RegisterAsync(
-        napi_env env, napi_value *args, size_t argcAsync, const size_t argcPromise, DSHelperOnOffCB *onCB);
-    static void RegisterExecuteCB(napi_env env, void *data);
-    static void RegisterCompleteCB(napi_env env, napi_status status, void *data);
-
-    static napi_value UnRegisterWrap(napi_env env, napi_callback_info info, DSHelperOnOffCB *offCB);
-    static napi_value UnRegisterAsync(
-        napi_env env, napi_value *args, size_t argc, const size_t argcPromise, DSHelperOnOffCB *offCB);
-    static void UnRegisterExecuteCB(napi_env env, void *data);
-    static void UnRegisterCompleteCB(napi_env env, napi_status status, void *data);
-    static void FindRegisterObs(napi_env env, DSHelperOnOffCB *data);
-    static void FindRegisterObsByCallBack(napi_env env, DSHelperOnOffCB *data);
-
     std::shared_ptr<DataShareHelper> datashareHelper_ = nullptr;
-    std::map<std::string, sptr<AAFwk::IDataAbilityObserver>> observerMap_;
+    std::map<std::string, sptr<NAPIDataShareObserver>> observerMap_;
 
     struct ContextInfo : public AsyncCall::Context {
         NapiDataShareHelper *proxy = nullptr;
