@@ -40,6 +40,8 @@ public:
     static napi_value Napi_NormalizeUri(napi_env env, napi_callback_info info);
     static napi_value Napi_DenormalizeUri(napi_env env, napi_callback_info info);
     static napi_value Napi_NotifyChange(napi_env env, napi_callback_info info);
+
+    void ReleaseObserverMap();
 private:
     static napi_value GetConstructor(napi_env env);
     static napi_value Initialize(napi_env env, napi_callback_info info);

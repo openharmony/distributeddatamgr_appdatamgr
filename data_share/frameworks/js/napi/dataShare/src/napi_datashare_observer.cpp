@@ -75,7 +75,6 @@ void NAPIDataShareObserver::DeleteReference()
     if (ref_ != nullptr) {
         napi_delete_reference(env_, ref_);
     }
-
 }
 }  // namespace DataShare
 }  // namespace OHOS
