@@ -56,12 +56,12 @@ ohos_shared_library("datashare_common") {
 
   deps = [
     "//foundation/bundlemanager/bundle_framework/common:libappexecfwk_common",
-    "//utils/native/base:utils",
   ]
 
   external_deps = [
     "ability_base:zuri",
     "bundle_framework:appexecfwk_base",
+    "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "napi:ace_napi",

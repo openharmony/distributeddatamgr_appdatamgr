@@ -83,11 +83,11 @@ ohos_shared_library("datashare_abilitykit") {
     "access_token:libaccesstoken_sdk",
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
+    "c_utils:utils",
     "ipc:ipc_core",
     "ipc_js:rpc",
     "relational_store:native_dataability",
     "relational_store:native_rdb",
-    "utils_base:utils",
   ]
 
   public_deps = [
@@ -116,9 +116,9 @@ ohos_shared_library("datashare_ext_ability_module") {
   external_deps = [
     "ability_base:want",
     "ability_runtime:runtime",
+    "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "relational_store:native_appdatafwk",
-    "utils_base:utils",
   ]
 
   subsystem_name = "distributeddatamgr"

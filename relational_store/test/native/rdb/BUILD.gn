@@ -24,7 +24,7 @@ config("module_private_config") {
     "${relational_store_innerapi_path}/rdb/include",
     "${relational_store_native_path}/rdb/src",
     "${relational_store_innerapi_path}/appdatafwk/include",
-    "//utils/native/base/include",
+    "//commonlibrary/c_utils/base/include",
   ]
 
   if (relational_store_rdb_support_icu) {
@@ -62,6 +62,7 @@ ohos_unittest("NativeRdbTest") {
   configs = [ ":module_private_config" ]
 
   external_deps = [
+    "c_utils:utils",
     "hilog_native:libhilog",
     "ipc:ipc_core",
     "relational_store:native_rdb",
@@ -72,7 +73,6 @@ ohos_unittest("NativeRdbTest") {
     "//third_party/icu/icu4c:shared_icui18n",
     "//third_party/icu/icu4c:shared_icuuc",
     "//third_party/sqlite:sqlite",
-    "//utils/native/base:utils",
   ]
 }
 

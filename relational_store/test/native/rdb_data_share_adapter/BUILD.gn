@@ -30,7 +30,7 @@ config("module_private_config") {
     "${datashare_base_path}/interfaces/inner_api/provider/include",
     "${relational_store_innerapi_path}/rdb/include",
     "${relational_store_innerapi_path}/rdb_data_share_adapter/include",
-    "//utils/native/base/include",
+    "//commonlibrary/c_utils/base/include",
   ]
 
   if (relational_store_rdb_support_icu) {
@@ -49,6 +49,7 @@ ohos_unittest("RdbDataShareAdapterTest") {
   configs = [ ":module_private_config" ]
 
   external_deps = [
+    "c_utils:utils",
     "data_share:datashare_common",
     "hilog_native:libhilog",
     "relational_store:native_rdb",
@@ -59,7 +60,6 @@ ohos_unittest("RdbDataShareAdapterTest") {
     "//third_party/googletest:gtest_main",
     "//third_party/icu/icu4c:shared_icui18n",
     "//third_party/icu/icu4c:shared_icuuc",
-    "//utils/native/base:utils",
   ]
 }
 
