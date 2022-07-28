@@ -50,6 +50,10 @@ void NAPIDataShareObserver::OnChange()
         [](uv_work_t *work, int status) {
             LOG_DEBUG("uv_queue_work start");
             std::shared_ptr<ObserverWorker> innerWorker(reinterpret_cast<ObserverWorker *>(work->data));
+            if (innerWorker->observer_->ref_ == nullptr) {
+                LOG_ERROR("innerWorker->observer_->ref_ is nullptr");
+                return;
+            }
             napi_value callback = nullptr;
             napi_value args[2] = {0};
             napi_value global = nullptr;
