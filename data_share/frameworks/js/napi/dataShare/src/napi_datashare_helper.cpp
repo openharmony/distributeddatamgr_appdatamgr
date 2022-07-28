@@ -162,7 +162,17 @@ napi_value NapiDataShareHelper::Initialize(napi_env env, napi_callback_info info
     g_dataShareHelperList.emplace_back(proxy->datashareHelper_);
     auto finalize = [](napi_env env, void * data, void * hint) {
         NapiDataShareHelper *proxy = reinterpret_cast<NapiDataShareHelper *>(data);
-        delete proxy;
+        if (proxy != nullptr) {
+            auto it = proxy->observerMap_.begin();
+            while (it != proxy->observerMap_.end()) {
+                if (proxy->datashareHelper_ != nullptr) {
+                    proxy->datashareHelper_->UnregisterObserver(Uri(it->first), it->second);
+                }
+                it->second->DeleteReference();
+            }
+            proxy->observerMap_.clear();
+            delete proxy;
+        }
     };
     if (napi_wrap(env, self, proxy, finalize, nullptr, nullptr) != napi_ok) {
         finalize(env, proxy, nullptr);
@@ -684,6 +694,7 @@ napi_value NapiDataShareHelper::Napi_On(napi_env env, napi_callback_info info)
     auto obs = proxy->observerMap_.find(uri);
     if (obs != proxy->observerMap_.end()) {
         proxy->datashareHelper_->UnregisterObserver(Uri(uri), obs->second);
+        obs->second->DeleteReference();
         proxy->observerMap_.erase(uri);
     }
     proxy->datashareHelper_->RegisterObserver(Uri(uri), observer);
@@ -730,6 +741,7 @@ napi_value NapiDataShareHelper::Napi_Off(napi_env env, napi_callback_info info)
     auto obs = proxy->observerMap_.find(uri);
     if (obs != proxy->observerMap_.end()) {
         proxy->datashareHelper_->UnregisterObserver(Uri(uri), obs->second);
+        obs->second->DeleteReference();
         proxy->observerMap_.erase(uri);
     } else {
         LOG_DEBUG("this uri hasn't been registered");

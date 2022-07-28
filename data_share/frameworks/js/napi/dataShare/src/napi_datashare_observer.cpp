@@ -25,16 +25,15 @@ NAPIDataShareObserver::NAPIDataShareObserver(napi_env env, napi_value callback)
     napi_get_uv_event_loop(env, &loop_);
 }
 
-NAPIDataShareObserver::~NAPIDataShareObserver()
-{
-    if (ref_ != nullptr) {
-        napi_delete_reference(env_, ref_);
-    }
-}
+NAPIDataShareObserver::~NAPIDataShareObserver() {}
 
 void NAPIDataShareObserver::OnChange()
 {
     LOG_DEBUG("OnChange called");
+    if (ref_ == nullptr) {
+        LOG_ERROR("ref_ == nullptr");
+        return;
+    }
     ObserverWorker *observerWorker = new (std::nothrow)ObserverWorker(this);
     if (observerWorker == nullptr) {
         LOG_ERROR("Failed to create observerWorker");
@@ -51,6 +50,10 @@ void NAPIDataShareObserver::OnChange()
         [](uv_work_t *work, int status) {
             LOG_DEBUG("uv_queue_work start");
             std::shared_ptr<ObserverWorker> innerWorker(reinterpret_cast<ObserverWorker *>(work->data));
+            if (innerWorker->observer_->ref_ == nullptr) {
+                LOG_ERROR("innerWorker->observer_->ref_ is nullptr");
+                return;
+            }
             napi_value callback = nullptr;
             napi_value args[2] = {0};
             napi_value global = nullptr;
@@ -68,6 +71,14 @@ void NAPIDataShareObserver::OnChange()
         LOG_ERROR("uv_queue_work failed");
         delete observerWorker;
         delete work;
+    }
+}
+
+void NAPIDataShareObserver::DeleteReference()
+{
+    if (ref_ != nullptr) {
+        napi_delete_reference(env_, ref_);
+        ref_ = nullptr;
     }
 }
 }  // namespace DataShare
