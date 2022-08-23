@@ -23,7 +23,8 @@
 
 namespace OHOS {
 namespace NativeRdb {
-AbsResultSet::AbsResultSet() : rowPos(INIT_POS), isClosed(false)
+AbsResultSet::AbsResultSet()
+    : rowPos_(INIT_POS), startPos_(0), lastPos_(0), blockPos_(0), isClosed(false)
 {}
 
 AbsResultSet::~AbsResultSet() {}
@@ -80,16 +81,16 @@ int AbsResultSet::GetColumnType(int columnIndex, ColumnType &columnType)
 
 int AbsResultSet::GetRowIndex(int &position) const
 {
-    position = rowPos;
+    position = rowPos_;
     return E_OK;
 }
 
 int AbsResultSet::GoTo(int offset)
 {
     DistributedDataDfx::DdsTrace trace(std::string(LOG_TAG "::") + std::string(__FUNCTION__));
-    int ret = GoToRow(rowPos + offset);
+    int ret = GoToRow(rowPos_ + offset);
     if (ret != E_OK) {
-        LOG_ERROR("AbsResultSet::GoTo return ret is wrong!");
+        LOG_WARN("AbsResultSet::GoTo return ret is wrong!");
         return ret;
     }
     return E_OK;
@@ -100,7 +101,7 @@ int AbsResultSet::GoToFirstRow()
     DistributedDataDfx::DdsTrace trace(std::string(LOG_TAG "::") + std::string(__FUNCTION__));
     int ret = GoToRow(0);
     if (ret != E_OK) {
-        LOG_ERROR("AbsResultSet::GoToFirstRow return ret is wrong!");
+        LOG_WARN("AbsResultSet::GoToFirstRow return ret is wrong!");
         return ret;
     }
     return E_OK;
@@ -112,13 +113,13 @@ int AbsResultSet::GoToLastRow()
     int rowCnt = 0;
     int ret = GetRowCount(rowCnt);
     if (ret != E_OK) {
-        LOG_ERROR("AbsResultSet::GoToLastRow  return GetRowCount::ret is wrong!");
+        LOG_WARN("AbsResultSet::GoToLastRow  return GetRowCount::ret is wrong!");
         return ret;
     }
 
     ret = GoToRow(rowCnt - 1);
     if (ret != E_OK) {
-        LOG_ERROR("AbsResultSet::GoToLastRow  return GoToRow::ret is wrong!");
+        LOG_WARN("AbsResultSet::GoToLastRow  return GoToRow::ret is wrong!");
         return ret;
     }
     return E_OK;
@@ -127,9 +128,9 @@ int AbsResultSet::GoToLastRow()
 int AbsResultSet::GoToNextRow()
 {
     DistributedDataDfx::DdsTrace trace(std::string(LOG_TAG "::") + std::string(__FUNCTION__));
-    int ret = GoToRow(rowPos + 1);
+    int ret = GoToRow(rowPos_ + 1);
     if (ret != E_OK) {
-        LOG_ERROR("AbsResultSet::GoToNextRow  return GoToRow::ret is wrong!");
+        LOG_WARN("AbsResultSet::GoToNextRow  return GoToRow::ret is wrong!");
         return ret;
     }
     return E_OK;
@@ -138,9 +139,9 @@ int AbsResultSet::GoToNextRow()
 int AbsResultSet::GoToPreviousRow()
 {
     DistributedDataDfx::DdsTrace trace(std::string(LOG_TAG "::") + std::string(__FUNCTION__));
-    int ret = GoToRow(rowPos - 1);
+    int ret = GoToRow(rowPos_ - 1);
     if (ret != E_OK) {
-        LOG_ERROR("AbsResultSet::GoToPreviousRow  return GoToRow::ret is wrong!");
+        LOG_WARN("AbsResultSet::GoToPreviousRow  return GoToRow::ret is wrong!");
         return ret;
     }
     return E_OK;
@@ -148,7 +149,7 @@ int AbsResultSet::GoToPreviousRow()
 
 int AbsResultSet::IsAtFirstRow(bool &result) const
 {
-    result = (rowPos == 0);
+    result = (rowPos_ == 0);
     return E_OK;
 }
 
@@ -160,13 +161,13 @@ int AbsResultSet::IsAtLastRow(bool &result)
         LOG_ERROR("AbsResultSet::IsAtLastRow  return GetRowCount::ret is wrong!");
         return ret;
     }
-    result = (rowPos == (rowCnt - 1));
+    result = (rowPos_ == (rowCnt - 1));
     return E_OK;
 }
 
 int AbsResultSet::IsStarted(bool &result) const
 {
-    result = (rowPos != INIT_POS);
+    result = (rowPos_ != INIT_POS);
     return E_OK;
 }
 
@@ -178,7 +179,7 @@ int AbsResultSet::IsEnded(bool &result)
         LOG_ERROR("AbsResultSet::IsEnded  return GetRowCount::ret is wrong!");
         return ret;
     }
-    result = (rowCnt == 0) ? true : (rowPos == rowCnt);
+    result = (rowCnt == 0) ? true : (rowPos_ == rowCnt);
     return E_OK;
 }
 
