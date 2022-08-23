@@ -45,10 +45,8 @@ ohos_shared_library("datashare") {
     "ability_runtime:napi_base_context",
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
-    "data_share:datashare_abilitykit",
     "data_share:datashare_common",
-    "eventhandler:libeventhandler",
-    "eventhandler:libeventhandler",
+    "data_share:datashare_consumer",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "napi:ace_napi",
@@ -78,8 +76,8 @@ ohos_shared_library("datasharepredicates") {
   deps = [ "${datashare_innerapi_path}/common:datashare_common" ]
 
   external_deps = [
-    "data_share:datashare_abilitykit",
     "data_share:datashare_common",
+    "data_share:datashare_consumer",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "napi:ace_napi",
