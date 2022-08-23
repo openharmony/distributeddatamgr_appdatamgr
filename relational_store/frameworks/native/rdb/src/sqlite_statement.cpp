@@ -287,7 +287,7 @@ int SqliteStatement::GetColumnString(int index, std::string &value) const
     int type = sqlite3_column_type(stmtHandle, index);
     if (type == SQLITE_TEXT) {
         auto val = reinterpret_cast<const char *>(sqlite3_column_text(stmtHandle, index));
-        value = (val == nullptr) ? "" : val;
+        value = (val == nullptr) ? "" : std::string(val, sqlite3_column_bytes(stmtHandle, index));
     } else if (type == SQLITE_INTEGER) {
         int64_t val = sqlite3_column_int64(stmtHandle, index);
         value = std::to_string(val);

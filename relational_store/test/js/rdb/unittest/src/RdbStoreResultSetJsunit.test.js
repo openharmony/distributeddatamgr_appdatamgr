@@ -80,6 +80,45 @@ describe('rdbResultSetTest', function () {
         console.log(TAG + "createTest data end");
     }
 
+    function random(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function createUint8Array(length) {
+        let i = 0
+        let index = 0
+        let temp = null
+        let u8 = new Uint8Array(length)
+        length = typeof (length) === 'undefined' ? 9 : length
+        for (i = 1; i <= length; i++) {
+            u8[i - 1] = i
+        }
+        for (i = 1; i <= length; i++) {
+            index = parseInt(Math.random() * (length - i)) + i
+            if (index != i) {
+                temp = u8[i - 1]
+                u8[i - 1] = u8[index - 1]
+                u8[index - 1] = temp
+            }
+        }
+        return u8;
+    }
+
+    async function createBigData(size) {
+        await rdbStore.executeSql("DELETE FROM test");
+        let u8 = createUint8Array(32768);
+        let valueBucketArray = new Array();
+        for (let i = 0; i < size; i++) {
+            valueBucketArray.push({
+                "data1": "test" + i,
+                "data2": 18,
+                "data3": 100.5,
+                "data4": u8,
+            });
+        }
+        await rdbStore.batchInsert("test", valueBucketArray);
+    }
+
     /**
      * @tc.name resultSet getBlob normal test
      * @tc.number SUB_DDM_AppDataFWK_JSRDB_ResultSet_0010
@@ -220,7 +259,7 @@ describe('rdbResultSetTest', function () {
             expect(true).assertEqual(resultSet.goToNextRow())
             expect(true).assertEqual(resultSet.isStarted)
             expect(false).assertEqual(resultSet.goToPreviousRow())
-            expect(false).assertEqual(resultSet.isStarted)
+            expect(true).assertEqual(resultSet.isStarted)
         } catch (e) {
             expect(null).assertFail();
         }
@@ -1745,6 +1784,246 @@ describe('rdbResultSetTest', function () {
             resultSet = null;
             done();
             console.log(TAG + "************* testClose0002 end *************");
+        }
+    })
+
+    /**
+     * @tc.name big resultSet data test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_ResultSet_0222
+     * @tc.desc big resultSet data test
+     */
+    it('testBigData0001', 0, async function (done) {
+        console.log(TAG + "************* testBigData0001 start *************");
+        {
+            await createBigData(500);
+            let resultSet = await rdbStore.querySql("SELECT * FROM test");
+            let count = resultSet.rowCount;
+            expect(500).assertEqual(count);
+
+            resultSet.goToFirstRow();
+            let i = 0;
+            while (resultSet.isEnded == false) {
+                expect("test" + i++).assertEqual(resultSet.getString(1))
+                resultSet.goToNextRow();
+            }
+
+            resultSet.close()
+            expect(true).assertEqual(resultSet.isClosed)
+            resultSet = null;
+            done();
+            console.log(TAG + "************* testBigData0001 end *************");
+        }
+    })
+
+    /**
+     * @tc.name big resultSet data test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_ResultSet_0223
+     * @tc.desc big resultSet data test
+     */
+    it('testBigData0002', 0, async function (done) {
+        console.log(TAG + "************* testBigData0002 start *************");
+        {
+            await createBigData(500);
+            let resultSet = await rdbStore.querySql("SELECT * FROM test");
+            let count = resultSet.rowCount;
+            expect(500).assertEqual(count);
+
+            resultSet.goToLastRow();
+            let i = resultSet.rowCount;
+            while (i >= 1) {
+                expect("test" + --i).assertEqual(resultSet.getString(1))
+                resultSet.goToPreviousRow();
+            }
+
+            resultSet.close()
+            expect(true).assertEqual(resultSet.isClosed)
+            resultSet = null;
+            done();
+            console.log(TAG + "************* testBigData0002 end *************");
+        }
+    })
+
+    /**
+     * @tc.name big resultSet data test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_ResultSet_0224
+     * @tc.desc big resultSet data test
+     */
+    it('testBigData0003', 0, async function (done) {
+        console.log(TAG + "************* testBigData0003 start *************");
+        {
+            await createBigData(500);
+            let resultSet = await rdbStore.querySql("SELECT * FROM test");
+            let count = resultSet.rowCount;
+            expect(500).assertEqual(count);
+
+            let rows = [62, 80, 59, 121, 45, 99, 42, 104, 41, 105, 499, 248];
+            for (const i of rows) {
+                resultSet.goToRow(i);
+                expect("test" + i).assertEqual(resultSet.getString(1))
+            }
+
+            resultSet.close()
+            expect(true).assertEqual(resultSet.isClosed)
+            resultSet = null;
+            done();
+            console.log(TAG + "************* testBigData0003 end *************");
+        }
+    })
+
+    /**
+     * @tc.name big resultSet data test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_ResultSet_0225
+     * @tc.desc big resultSet data test
+     */
+    it('testBigData0004', 0, async function (done) {
+        console.log(TAG + "************* testBigData0004 start *************");
+        {
+            await createBigData(0);
+            let resultSet = await rdbStore.querySql("SELECT * FROM test");
+            let count = resultSet.rowCount;
+            expect(0).assertEqual(count);
+
+            resultSet.goToFirstRow();
+            expect(false).assertEqual(resultSet.isStarted);
+
+            let rows = [1, 2, 0, -1, -2];
+            for (const i of rows) {
+                resultSet.goToRow(i);
+                expect(false).assertEqual(resultSet.isStarted);
+            }
+
+            resultSet.close()
+            expect(true).assertEqual(resultSet.isClosed)
+            resultSet = null;
+            done();
+            console.log(TAG + "************* testBigData0004 end *************");
+        }
+    })
+
+    /**
+     * @tc.name big resultSet data test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_ResultSet_0226
+     * @tc.desc big resultSet data test
+     */
+    it('testBigData0005', 0, async function (done) {
+        console.log(TAG + "************* testBigData0005 start *************");
+        {
+            await createBigData(1);
+            let resultSet = await rdbStore.querySql("SELECT * FROM test");
+            let count = resultSet.rowCount;
+            expect(1).assertEqual(count);
+
+            resultSet.goToFirstRow();
+            expect(true).assertEqual(resultSet.isStarted);
+            expect("test0").assertEqual(resultSet.getString(1))
+
+            let rows = [1, 2, -1, -2];
+            for (const i of rows) {
+                resultSet.goToRow(i);
+                expect(true).assertEqual(resultSet.isStarted);
+                expect("").assertEqual(resultSet.getString(1))
+            }
+
+            resultSet.close()
+            expect(true).assertEqual(resultSet.isClosed)
+            resultSet = null;
+            done();
+            console.log(TAG + "************* testBigData0005 end *************");
+        }
+    })
+
+    /**
+     * @tc.name big resultSet data test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_ResultSet_0227
+     * @tc.desc big resultSet data test
+     */
+    it('testBigData0006', 0, async function (done) {
+        console.log(TAG + "************* testBigData0006 start *************");
+        {
+            await createBigData(2);
+            let resultSet = await rdbStore.querySql("SELECT * FROM test");
+            let count = resultSet.rowCount;
+            expect(2).assertEqual(count);
+
+            resultSet.goToFirstRow();
+            expect(true).assertEqual(resultSet.isStarted);
+
+            let rows = [0, 1];
+            for (const i of rows) {
+                resultSet.goToRow(i);
+                expect(true).assertEqual(resultSet.isStarted);
+                expect("test" + i).assertEqual(resultSet.getString(1))
+            }
+
+            rows = [2, 3, 4, -1, -2];
+            for (const i of rows) {
+                resultSet.goToRow(i);
+                expect(true).assertEqual(resultSet.isStarted);
+                expect("").assertEqual(resultSet.getString(1))
+            }
+
+            resultSet.close()
+            expect(true).assertEqual(resultSet.isClosed)
+            resultSet = null;
+            done();
+            console.log(TAG + "************* testBigData0006 end *************");
+        }
+    })
+
+    /**
+     * @tc.name big resultSet data test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_ResultSet_0228
+     * @tc.desc big resultSet data test
+     */
+    it('testBigData0007', 0, async function (done) {
+        console.log(TAG + "************* testBigData0007 start *************");
+        {
+            await createBigData(500);
+            let resultSet = await rdbStore.querySql("SELECT * FROM test");
+            let count = resultSet.rowCount;
+            expect(500).assertEqual(count);
+
+            let rows = [62, 80, 59, 121, 45, -1, 99, 42, 104, 41, 105, 499, 248];
+            for (const i of rows) {
+                resultSet.goToRow(i);
+                if (i > 0 ) {
+                    expect("test" + i).assertEqual(resultSet.getString(1))
+                } else {
+                    expect("test45").assertEqual(resultSet.getString(1))
+                }
+            }
+
+            resultSet.close()
+            expect(true).assertEqual(resultSet.isClosed)
+            resultSet = null;
+            done();
+            console.log(TAG + "************* testBigData0007 end *************");
+        }
+    })
+
+    /**
+     * @tc.name big resultSet data test
+     * @tc.number SUB_DDM_AppDataFWK_JSRDB_ResultSet_0229
+     * @tc.desc big resultSet data test
+     */
+    it('testBigData0008', 0, async function (done) {
+        console.log(TAG + "************* testBigData0008 start *************");
+        {
+            await createBigData(200);
+            let resultSet = await rdbStore.querySql("SELECT * FROM test");
+            let count = resultSet.rowCount;
+            expect(200).assertEqual(count);
+
+            let i = 0;
+            while (resultSet.goToNextRow() == 0) {
+                expect("test" + i++).assertEqual(resultSet.getString(1))
+            }
+
+            resultSet.close()
+            expect(true).assertEqual(resultSet.isClosed)
+            resultSet = null;
+            done();
+            console.log(TAG + "************* testBigData0008 end *************");
         }
     })
 
