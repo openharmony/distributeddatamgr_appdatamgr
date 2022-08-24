@@ -219,7 +219,37 @@ public:
         }
         return ashmem_->GetAshmemFd();
     }
-    
+
+    uint32_t GetStartPos()
+    {
+        return mHeader->startPos_;
+    }
+
+    uint32_t GetLastPos()
+    {
+        return mHeader->lastPos_;
+    }
+
+    uint32_t GetBlockPos()
+    {
+        return mHeader->blockPos_;
+    }
+
+    void SetStartPos(uint32_t startPos)
+    {
+        mHeader->startPos_ = startPos;
+    }
+
+    void SetLastPos(uint32_t lastPos)
+    {
+        mHeader->lastPos_ = lastPos;
+    }
+
+    void SetBlockPos(uint32_t blockPos)
+    {
+        mHeader->blockPos_ = blockPos;
+    }
+
 private:
     std::string mName;
     sptr<Ashmem> ashmem_;
@@ -242,6 +272,12 @@ private:
         uint32_t rowNums;
         /* Column numbers of the row group block. */
         uint32_t columnNums;
+        /* start position of the current block. */
+        uint32_t startPos_;
+        /* last position of the current block. */
+        uint32_t lastPos_;
+        /* current position of the current block. */
+        uint32_t blockPos_;
     };
 
     struct RowGroupHeader {
