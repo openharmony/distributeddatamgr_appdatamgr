@@ -20,6 +20,7 @@
 #include <cerrno>
 #include <cmath>
 #include <limits>
+#include <list>
 
 #include "js_logger.h"
 #include "js_utils.h"
@@ -31,6 +32,7 @@
 
 using namespace OHOS::NativePreferences;
 using namespace OHOS::AppDataMgrJsKit;
+using namespace OHOS::RdbJsKit;
 
 namespace OHOS {
 namespace PreferencesJsKit {
@@ -42,6 +44,8 @@ struct PreferencesAysncContext : NapiAsyncProxy<PreferencesAysncContext>::AysncC
     PreferencesValue defValue = PreferencesValue((int)0);
     std::map<std::string, PreferencesValue> allElements;
     bool hasKey;
+    std::list<std::string> keysModified;
+    std::vector<std::weak_ptr<PreferencesObserver>> preferencesObservers;
 };
 
 static __thread napi_ref constructor_;
@@ -334,8 +338,8 @@ int32_t GetAllExecute(PreferencesAysncContext *asyncContext, napi_value &output)
                 return ERR;
             }
         } else if (value.IsString()) {
-            std::string tempStr = (std::string)value;
-            if (JSUtils::Convert2JSValue(asyncContext->env, (std::string)value, jsVal) != napi_ok) {
+            std::string tempStr = std::string(value);
+            if (JSUtils::Convert2JSValue(asyncContext->env, std::string(value), jsVal) != napi_ok) {
                 LOG_ERROR("PreferencesProxy::GetAll get property string failed");
                 return ERR;
             }
@@ -419,7 +423,7 @@ napi_value PreferencesProxy::GetValue(napi_env env, napi_callback_info info)
                     errCode = ERR;
                 }
             } else if (asyncContext->defValue.IsString()) {
-                if (JSUtils::Convert2JSValue(asyncContext->env, (std::string)asyncContext->defValue, output) != E_OK) {
+                if (JSUtils::Convert2JSValue(asyncContext->env, std::string(asyncContext->defValue), output) != E_OK) {
                     LOG_ERROR("PreferencesProxy::GetValue Convert2JSValue stringVal failed");
                     errCode = ERR;
                 }
@@ -595,30 +599,22 @@ napi_value PreferencesProxy::UnRegisterObserver(napi_env env, napi_callback_info
     return nullptr;
 }
 
-PreferencesObserverImpl::PreferencesObserverImpl(napi_env env, napi_value callback) : observerRef(nullptr)
+PreferencesObserverImpl::PreferencesObserverImpl(napi_env env, napi_value callback) : NapiUvQueue(env, callback)
 {
-    this->env_ = env;
-    napi_create_reference(env_, callback, 1, &observerRef);
 }
 
 PreferencesObserverImpl::~PreferencesObserverImpl()
 {
-    napi_delete_reference(env_, observerRef);
 }
 
-void PreferencesObserverImpl::OnChange(Preferences &preferences, const std::string &key)
+void PreferencesObserverImpl::OnChange(const std::string &key)
 {
     LOG_DEBUG("OnChange key:%{public}s", key.c_str());
-    napi_value callback = nullptr;
-    napi_value global = nullptr;
-    napi_value result = nullptr;
-    napi_value args[1] = { 0 };
 
-    napi_create_string_utf8(env_, key.c_str(), key.size(), &args[0]);
-    napi_get_reference_value(env_, observerRef, &callback);
-    napi_get_global(env_, &global);
-
-    napi_call_function(env_, global, callback, 1, args, &result);
+    CallFunction([key](napi_env env, int &argc, napi_value *argv) {
+        argc = 1;
+        argv[0] = JSUtils::Convert2JSValue(env, key);
+    });
     LOG_DEBUG("OnChange key end");
 }
 } // namespace PreferencesJsKit

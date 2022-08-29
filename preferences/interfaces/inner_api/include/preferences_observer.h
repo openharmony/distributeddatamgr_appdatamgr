@@ -20,11 +20,10 @@
 
 namespace OHOS {
 namespace NativePreferences {
-class Preferences;
 class PreferencesObserver {
 public:
     virtual ~PreferencesObserver();
-    virtual void OnChange(Preferences &preferences, const std::string &key) = 0;
+    virtual void OnChange(const std::string &key) = 0;
 };
 } // End of namespace NativePreferences
 } // End of namespace OHOS

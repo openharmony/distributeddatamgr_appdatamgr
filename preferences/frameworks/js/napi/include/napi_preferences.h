@@ -21,6 +21,7 @@
 #include "napi/native_api.h"
 #include "napi/native_common.h"
 #include "napi/native_node_api.h"
+#include "napi_uv_queue.h"
 #include "preferences.h"
 #include "preferences_helper.h"
 
@@ -53,15 +54,12 @@ private:
     std::shared_ptr<OHOS::NativePreferences::PreferencesObserver> observer_;
 };
 
-class PreferencesObserverImpl : public OHOS::NativePreferences::PreferencesObserver {
+class PreferencesObserverImpl
+    : public OHOS::NativePreferences::PreferencesObserver, public OHOS::RdbJsKit::NapiUvQueue {
 public:
     PreferencesObserverImpl(napi_env env, napi_value callback);
     virtual ~PreferencesObserverImpl();
-    void OnChange(OHOS::NativePreferences::Preferences &preferences, const std::string &key) override;
-
-private:
-    napi_env env_;
-    napi_ref observerRef;
+    void OnChange(const std::string &key) override;
 };
 } // namespace PreferencesJsKit
 } // namespace OHOS

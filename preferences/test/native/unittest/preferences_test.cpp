@@ -90,7 +90,7 @@ void PreferencesTest::TearDown(void)
 class PreferencesObserverCounter : public PreferencesObserver {
 public:
     virtual ~PreferencesObserverCounter();
-    void OnChange(Preferences &preferences, const std::string &key) override;
+    void OnChange(const std::string &key) override;
 
     std::atomic_int notifyTimes;
     static const std::vector<std::string> NOTIFY_KEYS_VECTOR;
@@ -100,7 +100,7 @@ PreferencesObserverCounter::~PreferencesObserverCounter()
 {
 }
 
-void PreferencesObserverCounter::OnChange(Preferences &preferences, const std::string &key)
+void PreferencesObserverCounter::OnChange(const std::string &key)
 {
     for (auto it = NOTIFY_KEYS_VECTOR.cbegin(); it != NOTIFY_KEYS_VECTOR.cend(); it++) {
         if (key.compare(*it)) {
