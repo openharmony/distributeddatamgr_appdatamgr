@@ -23,9 +23,9 @@
 
 namespace OHOS {
 namespace NativeRdb {
-AbsResultSet::AbsResultSet()
-    : rowPos_(INIT_POS), startPos_(0), lastPos_(0), blockPos_(0), isClosed(false)
-{}
+AbsResultSet::AbsResultSet() : rowPos_(INIT_POS), isClosed(false)
+{
+}
 
 AbsResultSet::~AbsResultSet() {}
 

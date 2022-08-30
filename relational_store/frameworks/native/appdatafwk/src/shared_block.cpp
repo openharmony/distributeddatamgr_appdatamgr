@@ -154,6 +154,9 @@ int SharedBlock::Clear()
     mHeader->firstRowGroupOffset = sizeof(SharedBlockHeader);
     mHeader->rowNums = 0;
     mHeader->columnNums = 0;
+    mHeader->startPos_ = 0;
+    mHeader->lastPos_ = 0;
+    mHeader->blockPos_ = 0;
 
     RowGroupHeader *firstGroup = static_cast<RowGroupHeader *>(OffsetToPtr(mHeader->firstRowGroupOffset));
     if (!firstGroup) {
