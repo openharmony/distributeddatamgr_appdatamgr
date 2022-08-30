@@ -14,6 +14,7 @@ import("//build/ohos.gni")
 import("//build/ohos/ace/ace.gni")
 import("//foundation/distributeddatamgr/appdatamgr/data_share/datashare.gni")
 import("//foundation/distributeddatamgr/appdatamgr/preferences/preferences.gni")
+import("//foundation/distributeddatamgr/appdatamgr/relational_store/relational_store.gni")
 
 ohos_copy("appdatamgr_declaration") {
   sources = [ "./api" ]
@@ -25,12 +26,15 @@ ohos_copy("appdatamgr_declaration") {
 ohos_shared_library("storage") {
   include_dirs = [
     "include",
+    "${relational_store_napi_path}/rdb/include",
     "${relational_store_js_common_path}/include",
     "//third_party/node/src",
     "//utils/native/base/include",
   ]
 
   sources = [
+    "${relational_store_js_common_path}/src/js_utils.cpp",
+    "${relational_store_napi_path}/rdb/src/napi_uv_queue.cpp",
     "src/entry_point_storage.cpp",
     "src/napi_storage.cpp",
     "src/napi_storage_helper.cpp",
@@ -84,6 +88,7 @@ ohos_shared_library("preferences") {
   include_dirs = [
     "include",
     "${relational_store_js_common_path}/include",
+    "${relational_store_napi_path}/rdb/include",
     "//third_party/node/src",
     "//utils/native/base/include",
   ]
@@ -91,6 +96,7 @@ ohos_shared_library("preferences") {
   sources = [
     "${relational_store_js_common_path}/src/js_ability.cpp",
     "${relational_store_js_common_path}/src/js_utils.cpp",
+    "${relational_store_napi_path}/rdb/src/napi_uv_queue.cpp",
     "src/entry_point.cpp",
     "src/napi_preferences.cpp",
     "src/napi_preferences_helper.cpp",

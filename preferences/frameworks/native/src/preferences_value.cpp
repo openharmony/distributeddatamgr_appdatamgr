@@ -60,7 +60,7 @@ PreferencesValue::PreferencesValue(bool value)
 
 PreferencesValue::PreferencesValue(const char *value)
 {
-    PreferencesValue((std::string)value);
+    PreferencesValue(std::string(value));
 }
 
 PreferencesValue::PreferencesValue(std::string value)
