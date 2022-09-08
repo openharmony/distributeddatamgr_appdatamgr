@@ -255,35 +255,21 @@ int DataShareStubImpl::BatchInsert(const Uri &uri, const std::vector<DataShareVa
 bool DataShareStubImpl::RegisterObserver(const Uri &uri, const sptr<AAFwk::IDataAbilityObserver> &dataObserver)
 {
     LOG_INFO("begin.");
-    bool ret = false;
-    std::function<void()> syncTaskFunc = [=, &dataObserver, &ret, client = sptr<DataShareStubImpl>(this)]() {
-        auto extension = client->GetOwner();
-        if (extension == nullptr) {
-            LOG_ERROR("%{public}s end failed.", __func__);
-            return;
-        }
-        ret = extension->RegisterObserver(uri, dataObserver);
-    };
-    uvQueue_->SyncCall(syncTaskFunc);
-    LOG_INFO("end successfully.");
-    return ret;
+    auto extension = GetOwner();
+    if (extension == nullptr) {
+        return false;
+    }
+    return extension->RegisterObserver(uri, dataObserver);
 }
 
 bool DataShareStubImpl::UnregisterObserver(const Uri &uri, const sptr<AAFwk::IDataAbilityObserver> &dataObserver)
 {
     LOG_INFO("begin.");
-    bool ret = false;
-    std::function<void()> syncTaskFunc = [=, &dataObserver, &ret, client = sptr<DataShareStubImpl>(this)]() {
-        auto extension = client->GetOwner();
-        if (extension == nullptr) {
-            LOG_ERROR("%{public}s end failed.", __func__);
-            return;
-        }
-        ret = extension->UnregisterObserver(uri, dataObserver);
-    };
-    uvQueue_->SyncCall(syncTaskFunc);
-    LOG_INFO("end successfully.");
-    return ret;
+    auto extension = GetOwner();
+    if (extension == nullptr) {
+        return false;
+    }
+    return extension->UnregisterObserver(uri, dataObserver);
 }
 
 bool DataShareStubImpl::NotifyChange(const Uri &uri)
