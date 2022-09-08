@@ -41,7 +41,13 @@ DataShareResultSet::DataShareResultSet(std::shared_ptr<ResultSetBridge> &bridge)
 {
     std::string name = "DataShare" + std::to_string(blockId_++);
     blockWriter_ = std::make_shared<DataShareBlockWriterImpl>(name, DEFAULT_SHARE_BLOCK_SIZE);
+    if (blockWriter_ == nullptr) {
+        return;
+    }
     sharedBlock_ = blockWriter_->GetBlock();
+    if (sharedBlock_ == nullptr) {
+        return;
+    }
 }
 
 DataShareResultSet::~DataShareResultSet()
