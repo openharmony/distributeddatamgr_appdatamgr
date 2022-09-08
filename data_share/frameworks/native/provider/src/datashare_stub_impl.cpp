@@ -269,7 +269,7 @@ bool DataShareStubImpl::UnregisterObserver(const Uri &uri, const sptr<AAFwk::IDa
     if (extension == nullptr) {
         return false;
     }
-    return extension->UnregisterObserver(uri, dataObserver);   
+    return extension->UnregisterObserver(uri, dataObserver);
 }
 
 bool DataShareStubImpl::NotifyChange(const Uri &uri)
