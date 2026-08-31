@@ -15,8 +15,10 @@
 
 #include "sqlite_sql_builder.h"
 
+#include <charconv>
 #include <list>
 #include <regex>
+#include <system_error>
 
 #include "logger.h"
 #include "rdb_errno.h"
@@ -24,6 +26,25 @@
 
 namespace OHOS {
 namespace NativeRdb {
+namespace {
+bool ParseSqlLimitInt(const std::string &text, int &out)
+{
+    if (text.empty()) {
+        out = -1; // Query() passes empty offset; int API uses -1 for "no clause"
+        return true;
+    }
+    int value = 0;
+    const char *first = text.data();
+    const char *last = first + text.size();
+    auto result = std::from_chars(first, last, value);
+    if (result.ec != std::errc() || result.ptr != last) {
+        return false;
+    }
+    out = value;
+    return true;
+}
+}
+
 std::vector<std::string> g_onConflictClause = {
     "", " OR ROLLBACK", " OR ABORT", " OR FAIL", " OR IGNORE", " OR REPLACE"
 };
@@ -119,8 +140,16 @@ int SqliteSqlBuilder::BuildQueryString(bool distinct, const std::string &table, 
     } else {
         sql.append("* ");
     }
-    int climit = std::stoi(limit);
-    int coffset = std::stoi(offset);
+    int climit = -1;
+    int coffset = -1;
+    if (!ParseSqlLimitInt(limit, climit)) {
+        LOG_ERROR("invalid limit: %{public}s", limit.c_str());
+        return E_ERROR;
+    }
+    if (!ParseSqlLimitInt(offset, coffset)) {
+        LOG_ERROR("invalid offset: %{public}s", offset.c_str());
+        return E_ERROR;
+    }
     sql.append("FROM ").append(table).append(
         BuildSqlStringFromPredicates(having, where, groupBy, orderBy, climit, coffset));
     outSql = sql;
